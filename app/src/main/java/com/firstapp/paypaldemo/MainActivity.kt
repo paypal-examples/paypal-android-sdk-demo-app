@@ -21,13 +21,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             PayPalDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CartView(
-                        onPayWithPayPal = { amount ->
-                            println("PayPal for $$amount clicked")
-                        },
-                        onPayWithCard = { amount ->
-                            println("Card for $$amount clicked")
-                        }
+                    OrderCompleteView(
+                        orderID = "test",
+                        onDone = {
+                            println("Done!")
+                         }
                     )
                 }
             }
