@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.firstapp.PayPalDemo.CartView
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,13 +20,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             PayPalDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CartView(
-                        onPayWithPayPal = { amount ->
-                            println("PayPal for $$amount clicked")
-                        },
-                        onPayWithCard = { amount ->
-                            println("PayPal for $$amount clicked")
-                        }
+                    Greeting(
+                        name = "Android",
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
