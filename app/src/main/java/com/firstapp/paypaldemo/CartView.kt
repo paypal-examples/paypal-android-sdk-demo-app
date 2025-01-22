@@ -174,6 +174,7 @@ fun PaymentButton(
             }
             Text(
                 text = text,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )

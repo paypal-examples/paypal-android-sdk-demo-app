@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
                             println("PayPal for $$amount clicked")
                         },
                         onPayWithCard = { amount ->
-                            println("PayPal for $$amount clicked")
+                            println("Card for $$amount clicked")
                         }
                     )
                 }
