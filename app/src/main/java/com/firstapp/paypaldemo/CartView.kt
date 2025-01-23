@@ -15,8 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.tooling.preview.Preview
 
 data class Item(
     val name: String,
@@ -29,15 +28,14 @@ fun CartView(
     onPayWithPayPal: (Double) -> Unit,
     onPayWithCard: (Double) -> Unit
 ) {
-    val items = listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt ))
+    val items = listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt))
     val totalAmount = items.sumOf { it.amount }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .systemBarsPadding()
-            .padding(top = 48.dp),
+            .padding(20.dp),
 
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
@@ -46,7 +44,7 @@ fun CartView(
             text = "Cart",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 25.dp)
+            modifier = Modifier.padding(top = 16.dp, bottom = 25.dp)
         )
 
         items.forEach { item ->
@@ -55,15 +53,14 @@ fun CartView(
 
         Divider(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .padding(vertical = 16.dp)
                 .fillMaxWidth(),
             color = Color.Gray.copy(alpha = 0.2f)
         )
-        
+
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -80,23 +77,17 @@ fun CartView(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .padding(bottom = 40.dp)
-        ) {
-            PaymentButton(
-                text = "Pay with PayPal",
-                backgroundColor = Color(0xFFFFB700),
-                onClick = { onPayWithPayPal(totalAmount) }
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            PaymentButton(
-                text = "Pay with Card",
-                backgroundColor = Color.Black,
-                onClick = { onPayWithCard(totalAmount) }
-            )
-        }
+        PaymentButton(
+            text = "Pay with PayPal",
+            backgroundColor = Color(0xFFFFB700),
+            onClick = { onPayWithPayPal(totalAmount) }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        PaymentButton(
+            text = "Pay with Card",
+            backgroundColor = Color.Black,
+            onClick = { onPayWithCard(totalAmount) }
+        )
     }
 }
 
@@ -104,7 +95,6 @@ fun CartView(
 fun CartItemView(item: Item) {
     Box(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
     ) {
         Surface(
@@ -177,6 +167,20 @@ fun PaymentButton(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
+            )
+        }
+    }
+}
+
+@ExperimentalMaterial3Api
+@Preview
+@Composable
+fun CartViewPreview() {
+    MaterialTheme {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            CartView(
+                onPayWithCard = { amount -> },
+                onPayWithPayPal = { amount -> }
             )
         }
     }
