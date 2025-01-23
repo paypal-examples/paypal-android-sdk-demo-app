@@ -12,8 +12,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
+import com.paypal.android.paypalwebpayments.PayPalWebCheckoutFinishStartResult
 
 class MainActivity : ComponentActivity() {
+    override fun onResume() {
+        super.onResume()
+
+//        when (val result = payPalClient.finishStart(intent, pendingState)) {
+//            is PayPalWebCheckoutFinishStartResult.Success -> onPayPalPaymentSuccess(ORDER_ID)
+//            is PayPalWebCheckoutFinishStartResult.Failure -> TODO("handle failure")
+//            is PayPalWebCheckoutFinishStartResult.Canceled -> TODO("handle canceled")
+//            PayPalWebCheckoutFinishStartResult.NoResult -> {
+//                // do nothing
+//            }
+//        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,8 +44,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable("cart") {
                             CartView(
-                                onPayWithPayPal = { amount ->
-                                    println("Pay with PayPal: $amount")
+                                onPayPalPaymentSuccess = {
                                     navController.navigate("orderComplete")
                                 },
                                 onPayWithCard = { amount ->
