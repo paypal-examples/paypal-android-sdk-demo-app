@@ -46,19 +46,3 @@ fun OrderCompleteView (
 
     }
 }
-
-//@ExperimentalMaterial3Api
-//@Preview
-//@Composable
-//fun OrderCompleteViewPreview() {
-//    MaterialTheme {
-//        Surface(modifier = Modifier.fillMaxSize()) {
-//            OrderCompleteView(
-//                orderID = "test",
-//                onDone = {
-//                    println("OrderComplete!")
-//                }
-//            )
-//        }
-//    }
-//}
