@@ -15,19 +15,6 @@ import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutFinishStartResult
 
 class MainActivity : ComponentActivity() {
-    override fun onResume() {
-        super.onResume()
-
-//        when (val result = payPalClient.finishStart(intent, pendingState)) {
-//            is PayPalWebCheckoutFinishStartResult.Success -> onPayPalPaymentSuccess(ORDER_ID)
-//            is PayPalWebCheckoutFinishStartResult.Failure -> TODO("handle failure")
-//            is PayPalWebCheckoutFinishStartResult.Canceled -> TODO("handle canceled")
-//            PayPalWebCheckoutFinishStartResult.NoResult -> {
-//                // do nothing
-//            }
-//        }
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
