@@ -5,50 +5,53 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.paypal.android.corepayments.CoreConfig
-import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
-
-// These are for testing purposes. New orderID needs to be generated for each run
-const val CLIENT_ID =
-    "AQ04yLjwYNK_cZvD-S-HZY1TwV22AygaJ0JSiYdyqTcfcwRL6i8thQxKdTCZROmUou86wza_xoDk1WGz"
-
+import androidx.compose.runtime.collectAsState
+import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 
 class MainActivity : ComponentActivity() {
-    private lateinit var payPalClient: PayPalWebCheckoutClient
 
-    private val viewModel: PayPalViewModel by viewModels {
-        PayPalViewModelFactory(payPalClient)
-    }
+    // Instead of a PayPalViewModel, we have a single coordinator
+    private val coordinatorViewModel: CheckoutCoordinatorViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val coreConfig = CoreConfig(CLIENT_ID)
-        payPalClient = PayPalWebCheckoutClient(this, coreConfig, "com.firstapp.paypaldemo")
-
-        savedInstanceState?.getString("authState")?.let { restoredAuthState ->
-            viewModel.setAuthState(restoredAuthState)
-        }
+        // Let the coordinator create/hold the PayPalWebCheckoutClient.
+        coordinatorViewModel.setActivityForPayPalClient(this)
 
         setContent {
-            CheckoutFlow(activity = this, viewModel = viewModel)
-        }
-    }
+            PayPalDemoTheme {
+                // Observe the coordinator's state to see if there's an error or order complete
+                val checkoutState = coordinatorViewModel.checkoutState.collectAsState()
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        viewModel.getAuthState()?.let { authState ->
-            outState.putString("authState", authState)
+                // Basic “router” approach or wrap in your NavHost:
+                CheckoutFlow(
+                    onPayWithPayPal = { amount ->
+                        // Hardcode an orderId for testing
+                        val orderId = "9UW08484WT2900113"
+                        coordinatorViewModel.startPayPalCheckout(this, orderId)
+                    },
+                    onPayWithCard = { amount ->
+                        // Card flow, or just navigate to "order complete" for now
+                        // ...
+                    },
+                    checkoutState = checkoutState.value,
+                    onDismissError = {
+                        coordinatorViewModel.resetState()
+                    },
+                    onDismissComplete = {
+                        coordinatorViewModel.resetState()
+                    }
+                )
+            }
         }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        // Must call setIntent so that calling getIntent() gets the latest
         setIntent(intent)
-
-        viewModel.finishPayPalCheckout(
-            activity = this,
-            intent = intent
-        )
+        // Let the coordinator handle finishing PayPal after browser return
+        coordinatorViewModel.handleOnNewIntent(this, intent)
     }
 }
