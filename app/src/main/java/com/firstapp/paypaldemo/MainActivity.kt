@@ -16,8 +16,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Let the coordinator create/hold the PayPalWebCheckoutClient.
-        coordinatorViewModel.setActivityForPayPalClient(this)
 
         setContent {
             PayPalDemoTheme {
@@ -28,7 +26,8 @@ class MainActivity : ComponentActivity() {
                 CheckoutFlow(
                     onPayWithPayPal = { amount ->
                         // Hardcode an orderId for testing
-                        val orderId = "9UW08484WT2900113"
+                        coordinatorViewModel.setActivityForPayPalClient(this)
+                        val orderId = "0N731548G3069245R"
                         coordinatorViewModel.startPayPalCheckout(this, orderId)
                     },
                     onPayWithCard = { amount ->

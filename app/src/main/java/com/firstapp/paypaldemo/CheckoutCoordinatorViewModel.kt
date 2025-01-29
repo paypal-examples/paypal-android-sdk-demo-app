@@ -49,18 +49,14 @@ class CheckoutCoordinatorViewModel : ViewModel() {
      * Alternatively, you can set up the client once in onCreate and pass it here.
      */
     fun setActivityForPayPalClient(activity: ComponentActivity) {
-        if (payPalClient == null) {
-            val coreConfig = CoreConfig(CLIENT_ID)
-            payPalClient = PayPalWebCheckoutClient(activity, coreConfig, "com.firstapp.paypaldemo")
-        } else {
-            // If you need to rebind the Activity reference on config changes, do that here.
-            // e.g. payPalClient?.setActivity(activity) - depends on library’s API
-        }
+        payPalClient = null
+        payPalViewModel = null
 
-        // Also create the specialized PayPalViewModel if null
-        if (payPalViewModel == null) {
-            payPalViewModel = PayPalViewModel(payPalClient!!)
-        }
+        val coreConfig = CoreConfig(CLIENT_ID)
+       PayPalWebCheckoutClient(activity, coreConfig, "com.firstapp.paypaldemo").let { client ->
+           payPalClient = client
+           payPalViewModel = PayPalViewModel(client)
+       }
     }
 
     /**
@@ -111,5 +107,11 @@ class CheckoutCoordinatorViewModel : ViewModel() {
      */
     fun resetState() {
         _checkoutState.value = CheckoutState.Idle
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        payPalClient = null
+        payPalViewModel = null
     }
 }
