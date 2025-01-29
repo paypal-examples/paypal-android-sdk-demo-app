@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.navigation.compose.rememberNavController
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
 
@@ -32,8 +31,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            val navController = rememberNavController()
-            CheckoutFlow(activity = this, viewModel = viewModel, navController  = navController)
+            CheckoutFlow(activity = this, viewModel = viewModel)
         }
     }
 

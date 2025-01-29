@@ -9,14 +9,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
 fun CheckoutFlow(
     activity: ComponentActivity,
-    viewModel: PayPalViewModel,
-    navController: NavHostController
+    viewModel: PayPalViewModel
 ) {
+    val navController = rememberNavController()
+
     NavHost(
         navController = navController,
         startDestination = "cart"
@@ -24,7 +26,7 @@ fun CheckoutFlow(
         composable("cart") {
             CartView(
                 onPayWithPayPal = { amount ->
-                    val orderId = "2TJ24279FS4927634" // Hardcoded for now
+                    val orderId = "08S98512J3560802T" // Hardcoded for now
                     viewModel.startPayPalCheckout(activity, orderId) },
                 onPayWithCard = { amount ->
                     navController.navigate("orderComplete/testOrderId")
