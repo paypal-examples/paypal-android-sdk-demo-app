@@ -49,7 +49,6 @@ class PayPalViewModel(
      * Called after the user returns from the Chrome Custom Tab to finish the checkout.
      */
     suspend fun finishPayPalCheckout(
-        activity: ComponentActivity,
         intent: android.content.Intent,
         onSuccess: (String) -> Unit,
         onCanceled: () -> Unit,

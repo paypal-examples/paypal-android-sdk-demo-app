@@ -1,5 +1,6 @@
 package com.firstapp.paypaldemo
 
+import android.content.Context
 import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
@@ -48,12 +49,12 @@ class CheckoutCoordinatorViewModel : ViewModel() {
      * Initialize or update the PayPal client any time we have a fresh Activity reference.
      * Alternatively, you can set up the client once in onCreate and pass it here.
      */
-    fun setActivityForPayPalClient(activity: ComponentActivity) {
+    fun setActivityForPayPalClient(context: Context) {
         payPalClient = null
         payPalViewModel = null
 
         val coreConfig = CoreConfig(CLIENT_ID)
-       PayPalWebCheckoutClient(activity, coreConfig, "com.firstapp.paypaldemo").let { client ->
+       PayPalWebCheckoutClient(context, coreConfig, "com.firstapp.paypaldemo").let { client ->
            payPalClient = client
            payPalViewModel = PayPalViewModel(client)
        }
@@ -83,11 +84,10 @@ class CheckoutCoordinatorViewModel : ViewModel() {
      * Called from MainActivity.onNewIntent
      * to finish the PayPal flow after the Chrome Custom Tab returns.
      */
-    fun handleOnNewIntent(activity: ComponentActivity, intent: Intent) {
+    fun handleOnNewIntent(intent: Intent) {
         val vm = payPalViewModel ?: return
         viewModelScope.launch {
             vm.finishPayPalCheckout(
-                activity = activity,
                 intent = intent,
                 onSuccess = { completedOrderId ->
                     _checkoutState.value = CheckoutState.OrderComplete(completedOrderId)

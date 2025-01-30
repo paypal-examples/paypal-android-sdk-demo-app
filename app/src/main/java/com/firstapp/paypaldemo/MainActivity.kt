@@ -16,7 +16,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         setContent {
             PayPalDemoTheme {
                 // Observe the coordinator's state to see if there's an error or order complete
@@ -26,7 +25,7 @@ class MainActivity : ComponentActivity() {
                 CheckoutFlow(
                     onPayWithPayPal = { amount ->
                         // Hardcode an orderId for testing
-                        coordinatorViewModel.setActivityForPayPalClient(this)
+                        coordinatorViewModel.setActivityForPayPalClient(this.applicationContext)
                         val orderId = "0N731548G3069245R"
                         coordinatorViewModel.startPayPalCheckout(this, orderId)
                     },
@@ -51,6 +50,6 @@ class MainActivity : ComponentActivity() {
         // Must call setIntent so that calling getIntent() gets the latest
         setIntent(intent)
         // Let the coordinator handle finishing PayPal after browser return
-        coordinatorViewModel.handleOnNewIntent(this, intent)
+        coordinatorViewModel.handleOnNewIntent(intent)
     }
 }
