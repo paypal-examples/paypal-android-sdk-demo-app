@@ -46,8 +46,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        // Must call setIntent so that calling getIntent() gets the latest
-        setIntent(intent)
         // Let the coordinator handle finishing PayPal after browser return
         coordinatorViewModel.handleOnNewIntent(intent)
     }
