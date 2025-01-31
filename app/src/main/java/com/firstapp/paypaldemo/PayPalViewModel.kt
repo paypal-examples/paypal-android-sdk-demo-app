@@ -15,8 +15,8 @@ class PayPalViewModel(
     private var authState: String? = null
 
     /**
-     * Launches the PayPal web checkout flow via Chrome Custom Tab.
-     *
+     * Launches the PayPal web checkout flow via Braintree browser switch library
+     * Braintree browser switch library is a wrapper for Chrome Custom Tab.
      * onSuccess means the user was successfully sent to the browser.
      * The final 'finish' must still happen in handleOnNewIntent => finishPayPalCheckout.
      */
@@ -81,7 +81,6 @@ class PayPalViewModel(
                 if (orderId == null) {
                     onFailure("received success but PayPal returned a null orderId")
                 } else {
-                    println("✅ ")
                     val finalOrder = DemoMerchantAPI.completeOrder(orderId, "CAPTURE" )
                     println("✅ captured order: ${finalOrder.id}")
                     onSuccess(finalOrder.id)

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-// These are for testing purposes. New orderID needs to be generated for each run
+// clientID may also be fetched from backend
 const val CLIENT_ID =
     "AQ04yLjwYNK_cZvD-S-HZY1TwV22AygaJ0JSiYdyqTcfcwRL6i8thQxKdTCZROmUou86wza_xoDk1WGz"
 
@@ -36,7 +36,7 @@ sealed class CheckoutState {
 class CheckoutCoordinatorViewModel : ViewModel() {
 
     // The underlying PayPalWebCheckoutClient (depends on an Activity context).
-    // We'll set it in onCreate of Activity via a setter, or lazy init.
+    // We'll set it on PayPal button press from CartView
     private var payPalClient: PayPalWebCheckoutClient? = null
 
     // The specialized PayPalViewModel. We'll create it once we have a payPalClient.
