@@ -26,8 +26,7 @@ class MainActivity : ComponentActivity() {
                     onPayWithPayPal = { amount ->
                         // Hardcode an orderId for testing
                         coordinatorViewModel.setActivityForPayPalClient(this.applicationContext)
-                        val orderId = "0N731548G3069245R"
-                        coordinatorViewModel.startPayPalCheckout(this, orderId)
+                        coordinatorViewModel.startPayPalCheckout(this, amount)
                     },
                     onPayWithCard = { amount ->
                         // Card flow, or just navigate to "order complete" for now

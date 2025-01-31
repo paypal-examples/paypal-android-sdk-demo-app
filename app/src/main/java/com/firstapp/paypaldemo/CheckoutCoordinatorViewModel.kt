@@ -25,6 +25,7 @@ const val CLIENT_ID =
  */
 sealed class CheckoutState {
     object Idle : CheckoutState()
+    data class Loading(val message: String = "Loading...") : CheckoutState()
     data class OrderComplete(val orderId: String) : CheckoutState()
     data class Error(val message: String) : CheckoutState()
 }
@@ -64,12 +65,12 @@ class CheckoutCoordinatorViewModel : ViewModel() {
      * Start PayPal Checkout flow.
      * This is called from CartView’s “Pay with PayPal” button, for example.
      */
-    fun startPayPalCheckout(activity: ComponentActivity, orderId: String) {
+    fun startPayPalCheckout(activity: ComponentActivity,  amount: Double) {
         val vm = payPalViewModel ?: return
         viewModelScope.launch {
             vm.startPayPalCheckout(
+                amount = amount,
                 activity = activity,
-                orderId = orderId,
                 onSuccess = {
                     // We successfully launched the web flow, now just wait for onNewIntent to “finish”.
                 },

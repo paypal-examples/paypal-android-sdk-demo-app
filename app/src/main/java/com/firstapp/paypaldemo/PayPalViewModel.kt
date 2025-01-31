@@ -21,29 +21,45 @@ class PayPalViewModel(
      * The final 'finish' must still happen in handleOnNewIntent => finishPayPalCheckout.
      */
     suspend fun startPayPalCheckout(
+        amount: Double,
         activity: ComponentActivity,
-        orderId: String,
         onSuccess: () -> Unit,
         onFailure: (String) -> Unit
     ) {
-        val request = PayPalWebCheckoutRequest(
-            orderId = orderId,
-            fundingSource = PayPalWebCheckoutFundingSource.PAYPAL
-        )
+        try {
+            val order = DemoMerchantAPI.createOrder(
+                intent = "CAPTURE",
+                purchaseUnits = listOf(
+                    PurchaseUnit(
+                        amount = Amount(currencyCode = "USD", value = amount.toString())
+                    )
+                )
+            )
+            println("✅ Created order ${order.id}, status: ${order.status}")
 
-        when (val result = payPalClient.start(activity, request)) {
-            is PayPalPresentAuthChallengeResult.Success -> {
-                authState = result.authState
-                onSuccess()
+            val request = PayPalWebCheckoutRequest(
+                orderId = order.id,
+                fundingSource = PayPalWebCheckoutFundingSource.PAYPAL
+            )
+
+            when (val result = payPalClient.start(activity, request)) {
+                is PayPalPresentAuthChallengeResult.Success -> {
+                    authState = result.authState
+                    onSuccess()
+                }
+
+                is PayPalPresentAuthChallengeResult.Failure -> {
+                    onFailure(result.error.toString())
+                }
+
+                else -> {
+                    onFailure("Unexpected error during checkout.")
+                }
             }
-            is PayPalPresentAuthChallengeResult.Failure -> {
-                onFailure(result.error.toString())
-            }
-            else -> {
-                onFailure("Unexpected error during checkout.")
-            }
+        } catch (e: Exception){
+            onFailure("❌ Failed to create order on merchant server: ${e.message}")
         }
-    }
+    } // startPayPalCheckout
 
     /**
      * Called after the user returns from the Chrome Custom Tab to finish the checkout.
@@ -65,7 +81,10 @@ class PayPalViewModel(
                 if (orderId == null) {
                     onFailure("received success but PayPal returned a null orderId")
                 } else {
-                    onSuccess(orderId)
+                    println("✅ ")
+                    val finalOrder = DemoMerchantAPI.completeOrder(orderId, "CAPTURE" )
+                    println("✅ captured order: ${finalOrder.id}")
+                    onSuccess(finalOrder.id)
                 }
             }
             is PayPalWebCheckoutFinishStartResult.Failure -> {
