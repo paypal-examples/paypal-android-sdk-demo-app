@@ -50,7 +50,7 @@ class CheckoutCoordinatorViewModel : ViewModel() {
      * Initialize or update the PayPal client any time we have a fresh Activity reference.
      * Alternatively, you can set up the client once in onCreate and pass it here.
      */
-    fun setActivityForPayPalClient(context: Context) {
+    fun initializePayPalClient(context: Context) {
         payPalClient = null
         payPalViewModel = null
 
