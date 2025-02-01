@@ -1,16 +1,17 @@
 package com.firstapp.paypaldemo
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -23,15 +24,15 @@ fun OrderCompleteView (
 
     Column(
         modifier = Modifier
-            .padding(40.dp)
-        .padding(top = 48.dp),
+            .padding(20.dp)
+        .padding(top = 8.dp),
 
         verticalArrangement = Arrangement.Bottom,
     ) {
         Text("Order Complete", fontWeight = FontWeight.Bold, fontSize = 25.sp)
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Thank you for your order!")
+        Text("Thank you for your order! Your order number is #123456789.")
         Spacer(modifier = Modifier.weight(1.0f))
         Button(
             onClick = onDone,
@@ -43,21 +44,5 @@ fun OrderCompleteView (
             Text("Done")
         }
 
-    }
-}
-
-@ExperimentalMaterial3Api
-@Preview
-@Composable
-fun OrderCompleteViewPreview() {
-    MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            OrderCompleteView(
-                orderID = "test",
-                onDone = {
-                    println("OrderComplete!")
-                }
-            )
-        }
     }
 }

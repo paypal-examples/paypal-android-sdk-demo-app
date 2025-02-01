@@ -1,50 +1,51 @@
 package com.firstapp.paypaldemo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
-import com.firstapp.paypaldemo.CartView
 
 class MainActivity : ComponentActivity() {
+
+    // Instead of a PayPalViewModel, we have a single coordinator
+    private val coordinatorViewModel: CheckoutCoordinatorViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
             PayPalDemoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    OrderCompleteView(
-                        orderID = "test",
-                        onDone = {
-                            println("Done!")
-                         }
-                    )
-                }
+                // Observe the coordinator's state to see if there's an error or order complete
+                val checkoutState = coordinatorViewModel.checkoutState.collectAsState()
+
+                // Basic “router” approach or wrap in your NavHost:
+                CheckoutFlow(
+                    onPayWithPayPal = { amount ->
+                        coordinatorViewModel.initializePayPalClient(this.applicationContext)
+                        coordinatorViewModel.startPayPalCheckout(this, amount)
+                    },
+                    onPayWithCard = { amount ->
+                        // Card flow, or just navigate to "order complete" for now
+                        // ...
+                    },
+                    checkoutState = checkoutState.value,
+                    onDismissError = {
+                        coordinatorViewModel.resetState()
+                    },
+                    onDismissComplete = {
+                        coordinatorViewModel.resetState()
+                    }
+                )
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PayPalDemoTheme {
-        Greeting("Android")
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // Let the coordinator handle finishing PayPal after browser return
+        coordinatorViewModel.handleOnNewIntent(intent)
     }
 }
