@@ -68,6 +68,7 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     fun startPayPalCheckout(activity: ComponentActivity,  amount: Double) {
         val vm = payPalViewModel ?: return
         viewModelScope.launch {
+            _checkoutState.value = CheckoutState.Loading("Starting PayPal Checkout")
             vm.startPayPalCheckout(
                 amount = amount,
                 activity = activity,
@@ -88,6 +89,7 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     fun handleOnNewIntent(intent: Intent) {
         val vm = payPalViewModel ?: return
         viewModelScope.launch {
+            _checkoutState.value = CheckoutState.Loading("Finishing PayPal Checkout")
             vm.finishPayPalCheckout(
                 intent = intent,
                 onSuccess = { completedOrderId ->
