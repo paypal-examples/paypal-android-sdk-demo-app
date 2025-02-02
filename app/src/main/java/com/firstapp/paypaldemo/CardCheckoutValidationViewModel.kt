@@ -16,7 +16,7 @@ class CardCheckoutValidationViewModel : ViewModel() {
         get() = isCardFormValid()
 
     /**
-     * Check basic length constraints, same as iOS:
+     * Check basic length constraints:
      * - Card # must be 15-19 digits
      * - Expiration date must be exactly 4 digits (MMYY)
      * - CVV must be 3 or 4 digits
@@ -39,7 +39,7 @@ class CardCheckoutValidationViewModel : ViewModel() {
      */
     fun isCardValid(): Card? {
         return if (isValid) {
-            // create a Card object (similar to iOS extension)
+            // create a Card object
             val cleanedNumber = cardNumber.replace(" ", "")
             val exp = expirationDate.replace(" / ", "").replace("/", "")
             val month = exp.take(2)
