@@ -29,11 +29,29 @@ fun CheckoutFlow(
 ) {
     val navController = rememberNavController()
 
+    val coordinator: CheckoutCoordinatorViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+
     NavHost(navController = navController, startDestination = "cart") {
         composable("cart") {
             CartView(
                 onPayWithPayPal = onPayWithPayPal,
                 onPayWithCard = onPayWithCard
+            )
+        }
+
+        composable("cardCheckout/{amount}") { backStackEntry ->
+            val amountParam = backStackEntry.arguments?.getString("amount") ?: "0.0"
+            val amountDouble = amountParam.toDoubleOrNull() ?: 0.0
+            val vm = coordinator.getCardPaymentViewModel()
+
+            CardCheckoutView(
+                amount = amountDouble,
+                cardPaymentViewModel = vm,
+                onOrderCompleted = { orderId ->
+                    navController.navigate("orderComplete/$orderId") {
+                        popUpTo("cart") { inclusive = false }
+                    }
+                }
             )
         }
 
@@ -50,6 +68,12 @@ fun CheckoutFlow(
     when (checkoutState) {
         is CheckoutState.Loading -> {
             LoadingOverlay(checkoutState.message)
+        }
+        is CheckoutState.CardCheckout -> {
+            // Navigate to card checkout
+            LaunchedEffect(checkoutState) {
+                navController.navigate("cardCheckout/${checkoutState.amount}")
+            }
         }
         is CheckoutState.OrderComplete -> {
             // If the coordinator says we’re “complete”, navigate to orderComplete

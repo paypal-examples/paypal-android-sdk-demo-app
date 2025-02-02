@@ -10,7 +10,6 @@ import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 
 class MainActivity : ComponentActivity() {
 
-    // Instead of a PayPalViewModel, we have a single coordinator
     private val coordinatorViewModel: CheckoutCoordinatorViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,8 +27,8 @@ class MainActivity : ComponentActivity() {
                         coordinatorViewModel.startPayPalCheckout(this, amount)
                     },
                     onPayWithCard = { amount ->
-                        // Card flow, or just navigate to "order complete" for now
-                        // ...
+                        coordinatorViewModel.initializeCardClient(this.applicationContext)
+                        coordinatorViewModel.startCardCheckout(amount)
                     },
                     checkoutState = checkoutState.value,
                     onDismissError = {
