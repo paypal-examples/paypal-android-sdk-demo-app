@@ -41,7 +41,7 @@ class CardCheckoutValidationViewModel : ViewModel() {
         return if (isValid) {
             // create a Card object
             val cleanedNumber = cardNumber.replace(" ", "")
-            val exp = expirationDate.replace(" / ", "").replace("/", "")
+            val exp = expirationDate
             val month = exp.take(2)
             val year = "20" + exp.drop(2)
             Card(
@@ -68,7 +68,8 @@ class CardCheckoutValidationViewModel : ViewModel() {
     }
 
     fun updateExpirationDate(newValue: String) {
-        expirationDate = cardFormatter.formatFieldWith(newValue, Fields.EXPIRATION_DATE)
+        val cleaned = newValue.filter { it.isDigit() }.take(4)
+        expirationDate = cleaned
     }
 
     fun updateCVV(newValue: String) {

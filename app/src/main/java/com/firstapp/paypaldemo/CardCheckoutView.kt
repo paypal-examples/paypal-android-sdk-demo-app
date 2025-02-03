@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.Alignment
+import com.firstapp.paypaldemo.ExpirationDateVisualTransformation
 
 /**
  * A composable for card checkout
@@ -73,6 +74,7 @@ fun CardCheckoutView(
                         refreshFieldsFromVM()
                     },
                     label = { Text("MM / YY") },
+                    visualTransformation = ExpirationDateVisualTransformation(),
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(10.dp))

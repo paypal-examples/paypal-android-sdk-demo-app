@@ -20,12 +20,7 @@ class CardFormatter {
                 formatCardNumber(truncated, cardType)
             }
             Fields.EXPIRATION_DATE -> {
-                val cleanedText = text
-                    .replace(" / ", "")
-                    .replace("/", "")
-                    .filter { it.isDigit() }
-                val truncated = cleanedText.take(4)
-                formatExpirationDate(truncated)
+                text
             }
             Fields.CVV -> {
                 val cleaned = text.filter { it.isDigit() }

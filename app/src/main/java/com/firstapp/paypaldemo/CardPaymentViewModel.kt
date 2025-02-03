@@ -8,7 +8,6 @@ import com.paypal.android.cardpayments.Card
 import com.paypal.android.cardpayments.CardApproveOrderResult
 import com.paypal.android.cardpayments.CardRequest
 import com.paypal.android.cardpayments.threedsecure.SCA
-import com.paypal.android.corepayments.CoreConfig
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
