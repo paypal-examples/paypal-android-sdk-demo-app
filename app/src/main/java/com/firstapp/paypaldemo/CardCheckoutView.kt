@@ -10,6 +10,7 @@ import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.Alignment
 import com.firstapp.paypaldemo.ExpirationDateVisualTransformation
+import com.firstapp.paypaldemo.CardNumberVisualTransformation
 
 /**
  * A composable for card checkout
@@ -59,6 +60,7 @@ fun CardCheckoutView(
                     validationVM.updateCardNumber(newVal)
                     refreshFieldsFromVM()
                 },
+                visualTransformation =  CardNumberVisualTransformation(),
                 label = { Text("Card Number") },
                 modifier = Modifier.fillMaxWidth()
             )

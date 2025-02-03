@@ -14,10 +14,7 @@ class CardFormatter {
     fun formatFieldWith(text: String, field: Fields): String {
         return when (field) {
             Fields.CARD_NUMBER -> {
-                val cleanedText = text.replace(" ", "")
-                val cardType = CardType.getCardType(cleanedText)
-                val truncated = cleanedText.take(cardType.maxLength)
-                formatCardNumber(truncated, cardType)
+               text.filter { it.isDigit() }.take(19)
             }
             Fields.EXPIRATION_DATE -> {
                 text

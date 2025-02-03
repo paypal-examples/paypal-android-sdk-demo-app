@@ -6,7 +6,7 @@ import com.paypal.android.cardpayments.Card
 class CardCheckoutValidationViewModel : ViewModel() {
 
     var errorMessage: String = ""
-    var cardNumber: String = "4111 1111 1111 1111"
+    var cardNumber: String = "4111111111111111"
     var expirationDate: String = "0127"
     var cvv: String = "123"
 
@@ -22,8 +22,8 @@ class CardCheckoutValidationViewModel : ViewModel() {
      * - CVV must be 3 or 4 digits
      */
     private fun isCardFormValid(): Boolean {
-        val cleanedNumber = cardNumber.replace(" ", "")
-        val cleanedExp = expirationDate.replace(" / ", "").replace("/", "")
+        val cleanedNumber = cardNumber
+        val cleanedExp = expirationDate
         val cleanedCvv = cvv
 
         val numberOk = cleanedNumber.length in 15..19
@@ -40,7 +40,7 @@ class CardCheckoutValidationViewModel : ViewModel() {
     fun isCardValid(): Card? {
         return if (isValid) {
             // create a Card object
-            val cleanedNumber = cardNumber.replace(" ", "")
+            val cleanedNumber = cardNumber
             val exp = expirationDate
             val month = exp.take(2)
             val year = "20" + exp.drop(2)
