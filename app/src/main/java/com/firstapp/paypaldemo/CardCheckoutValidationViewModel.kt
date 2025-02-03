@@ -7,7 +7,7 @@ class CardCheckoutValidationViewModel : ViewModel() {
 
     var errorMessage: String = ""
     var cardNumber: String = "4111 1111 1111 1111"
-    var expirationDate: String = "01 / 27"
+    var expirationDate: String = "0127"
     var cvv: String = "123"
 
     private val cardFormatter = CardFormatter()

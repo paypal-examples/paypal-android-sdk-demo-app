@@ -9,7 +9,7 @@ enum class Fields {
 class CardFormatter {
 
     /**
-     * Main entry point: choose how to format the string based on the field type.
+     * Main entry point: choose how to fomrmat the string based on the field type.
      */
     fun formatFieldWith(text: String, field: Fields): String {
         return when (field) {
