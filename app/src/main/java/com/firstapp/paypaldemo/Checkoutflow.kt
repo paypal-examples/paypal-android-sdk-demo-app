@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 
@@ -40,6 +41,11 @@ fun CheckoutFlow(
         }
 
         composable("cardCheckout/{amount}") { backStackEntry ->
+            DisposableEffect(Unit) {
+                onDispose {
+                    coordinator.resetState()
+                }
+            }
             val amountParam = backStackEntry.arguments?.getString("amount") ?: "0.0"
             val amountDouble = amountParam.toDoubleOrNull() ?: 0.0
             val vm = coordinator.getCardPaymentViewModel()
