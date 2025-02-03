@@ -41,9 +41,13 @@ fun CheckoutFlow(
         }
 
         composable("cardCheckout/{amount}") { backStackEntry ->
+            val previousDestination = navController.previousBackStackEntry
+
             DisposableEffect(Unit) {
                 onDispose {
-                    coordinator.resetState()
+                    if (previousDestination?.destination?.route == "cart") {
+                        coordinator.resetState()
+                    }
                 }
             }
             val amountParam = backStackEntry.arguments?.getString("amount") ?: "0.0"

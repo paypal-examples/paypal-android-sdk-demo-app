@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
 fun OrderCompleteView (
     orderID: String,
@@ -32,7 +31,7 @@ fun OrderCompleteView (
         Text("Order Complete", fontWeight = FontWeight.Bold, fontSize = 25.sp)
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Thank you for your order! Your order number is #123456789.")
+        Text("Thank you for your order! Your order number is $orderID.")
         Spacer(modifier = Modifier.weight(1.0f))
         Button(
             onClick = onDone,
