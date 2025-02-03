@@ -8,9 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import com.firstapp.paypaldemo.ExpirationDateVisualTransformation
-import com.firstapp.paypaldemo.CardNumberVisualTransformation
 
 /**
  * A composable for card checkout
@@ -29,13 +28,13 @@ fun CardCheckoutView(
     val activity = LocalActivityResultRegistryOwner.current as ComponentActivity
 
     // Observe states from validationVM
-    var cardNumber by remember { mutableStateOf(validationVM.cardNumber) }
-    var expirationDate by remember { mutableStateOf(validationVM.expirationDate) }
-    var cvv by remember { mutableStateOf(validationVM.cvv) }
+    var cardNumber by rememberSaveable { mutableStateOf(validationVM.cardNumber) }
+    var expirationDate by rememberSaveable { mutableStateOf(validationVM.expirationDate) }
+    var cvv by rememberSaveable { mutableStateOf(validationVM.cvv) }
 
     // For showing a loading overlay or error
-    var isLoading by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf("") }
+    var isLoading by rememberSaveable { mutableStateOf(false) }
+    var errorMessage by rememberSaveable { mutableStateOf("") }
 
     // Sync fields each time user edits them
     fun refreshFieldsFromVM() {
@@ -96,7 +95,7 @@ fun CardCheckoutView(
             Button(
                 onClick = {
                     // 1) Validate
-                    val card = validationVM.isCardValid()
+                    val card = validationVM.validCard()
                     if (card == null) {
                         errorMessage = validationVM.errorMessage
                         return@Button

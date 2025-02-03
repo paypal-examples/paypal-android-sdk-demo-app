@@ -37,7 +37,7 @@ class CardCheckoutValidationViewModel : ViewModel() {
      * If valid, return a Card object we can send to `CardPaymentViewModel`.
      * Otherwise set errorMessage and return null.
      */
-    fun isCardValid(): Card? {
+    fun validCard(): Card? {
         return if (isValid) {
             // create a Card object
             val cleanedNumber = cardNumber
@@ -58,7 +58,7 @@ class CardCheckoutValidationViewModel : ViewModel() {
 
     fun updateCardNumber(newValue: String) {
         cardNumber = cardFormatter.formatFieldWith(newValue, Fields.CARD_NUMBER)
-        // optionally replicate iOS "cvv = 1234 if AMEX else 123"
+        //  "cvv = 1234 if AMEX else 123"
         val type = CardType.getCardType(cardNumber)
         if (type == CardType.AMERICAN_EXPRESS && cvv.length < 4) {
             cvv = "1234"
