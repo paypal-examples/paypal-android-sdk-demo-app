@@ -57,7 +57,7 @@ class CardCheckoutValidationViewModel : ViewModel() {
     }
 
     fun updateCardNumber(newValue: String) {
-        cardNumber = cardFormatter.formatFieldWith(newValue, Fields.CARD_NUMBER)
+        cardNumber = cardFormatter.formatFieldWith(newValue, CardFields.CARD_NUMBER)
         //  "cvv = 1234 if AMEX else 123"
         val type = CardType.getCardType(cardNumber)
         if (type == CardType.AMERICAN_EXPRESS && cvv.length < 4) {
@@ -73,6 +73,6 @@ class CardCheckoutValidationViewModel : ViewModel() {
     }
 
     fun updateCVV(newValue: String) {
-        cvv = cardFormatter.formatFieldWith(newValue, Fields.CVV)
+        cvv = cardFormatter.formatFieldWith(newValue, CardFields.CVV)
     }
 }

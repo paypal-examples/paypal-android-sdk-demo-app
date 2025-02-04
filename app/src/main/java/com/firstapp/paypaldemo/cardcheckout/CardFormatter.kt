@@ -1,6 +1,6 @@
 package com.firstapp.paypaldemo.cardcheckout
 
-enum class Fields {
+enum class CardFields {
     CARD_NUMBER,
     EXPIRATION_DATE,
     CVV
@@ -11,15 +11,15 @@ class CardFormatter {
     /**
      * Main entry point: choose how to fomrmat the string based on the field type.
      */
-    fun formatFieldWith(text: String, field: Fields): String {
+    fun formatFieldWith(text: String, field: CardFields): String {
         return when (field) {
-            Fields.CARD_NUMBER -> {
+            CardFields.CARD_NUMBER -> {
                text.filter { it.isDigit() }.take(19)
             }
-            Fields.EXPIRATION_DATE -> {
+            CardFields.EXPIRATION_DATE -> {
                 text
             }
-            Fields.CVV -> {
+            CardFields.CVV -> {
                 val cleaned = text.filter { it.isDigit() }
                 cleaned.take(4)
             }
