@@ -1,11 +1,11 @@
-package com.firstapp.paypaldemo.CardCheckout
+package com.firstapp.paypaldemo.cardcheckout
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firstapp.paypaldemo.Service.Amount
-import com.firstapp.paypaldemo.Service.DemoMerchantAPI
-import com.firstapp.paypaldemo.Service.PurchaseUnit
+import com.firstapp.paypaldemo.service.Amount
+import com.firstapp.paypaldemo.service.DemoMerchantAPI
+import com.firstapp.paypaldemo.service.PurchaseUnit
 import com.paypal.android.cardpayments.CardClient
 import com.paypal.android.cardpayments.Card
 import com.paypal.android.cardpayments.CardApproveOrderResult

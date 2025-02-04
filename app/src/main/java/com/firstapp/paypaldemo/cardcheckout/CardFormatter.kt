@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo.CardCheckout
+package com.firstapp.paypaldemo.cardcheckout
 
 enum class Fields {
     CARD_NUMBER,

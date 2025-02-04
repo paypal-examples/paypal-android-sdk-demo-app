@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo.Service
+package com.firstapp.paypaldemo.service
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

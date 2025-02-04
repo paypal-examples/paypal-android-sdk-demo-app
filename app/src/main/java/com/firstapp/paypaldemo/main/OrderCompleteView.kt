@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo.Main
+package com.firstapp.paypaldemo.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

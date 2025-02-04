@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo.Main
+package com.firstapp.paypaldemo.main
 
 import android.content.Intent
 import android.os.Bundle
