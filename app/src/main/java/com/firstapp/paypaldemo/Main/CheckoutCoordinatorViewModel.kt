@@ -150,6 +150,10 @@ class CheckoutCoordinatorViewModel : ViewModel() {
      */
     fun resetState() {
         _checkoutState.value = CheckoutState.Idle
+        payPalClient = null
+        payPalViewModel = null
+        cardClient = null
+        cardPaymentViewModel = null
     }
 
     override fun onCleared() {

@@ -2,14 +2,14 @@
 This repository contains a **demo app** that simulates a real-world merchant application, featuring a store, cart, and checkout process.
 The goal is to showcase core features of the **PayPal Android SDK** (Web Checkout and Card Payments), providing merchants with sample code and integration patterns to simplify development.
 This app makes merchant server side PayPal API calls via [PayPal Typescript Server SDK version 0.5.1](https://github.com/paypal/PayPal-TypeScript-Server-SDK) which is in beta.
-Our developer docs show example integration with direct PayPal server side API's.
+Our developer docs show an example integration with direct PayPal server-side calls.
 
 ## 🚀 Version 1.0 Features
 
 1. **Checkout with PayPal**
    * Seamless PayPal web checkout experience via Chrome Custom Tabs
 
-2. **Checkout with Cards**
+2. **Checkout with Card**
    * Collect card details in-app, then approve & capture the order via PayPal's Card Payments APIs
 
 ## 🎯 Purpose
