@@ -58,9 +58,7 @@ fun CheckoutFlow(
                 amount = amountDouble,
                 cardPaymentViewModel = vm,
                 onOrderCompleted = { orderId ->
-                    navController.navigate("orderComplete/$orderId") {
-                        popUpTo("cart") { inclusive = false }
-                    }
+                    navController.navigate("orderComplete/$orderId")
                 }
             )
         }
@@ -69,7 +67,7 @@ fun CheckoutFlow(
             val orderId = backStackEntry.arguments?.getString("orderId") ?: "Unknown"
             OrderCompleteView(orderID = orderId) {
                 onDismissComplete()
-                navController.popBackStack()
+                navController.popBackStack(route = "cart", inclusive = false)
             }
         }
     }
