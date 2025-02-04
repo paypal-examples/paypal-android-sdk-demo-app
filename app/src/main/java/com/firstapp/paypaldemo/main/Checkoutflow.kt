@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -16,8 +16,10 @@ import androidx.navigation.compose.rememberNavController
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
 
 @Composable
 fun CheckoutFlow(
@@ -29,6 +31,8 @@ fun CheckoutFlow(
 ) {
     val navController = rememberNavController()
 
+    val coordinator: CheckoutCoordinatorViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+
     NavHost(navController = navController, startDestination = "cart") {
         composable("cart") {
             CartView(
@@ -37,11 +41,34 @@ fun CheckoutFlow(
             )
         }
 
+        composable("cardCheckout/{amount}") { backStackEntry ->
+            val previousDestination = navController.previousBackStackEntry
+
+            DisposableEffect(Unit) {
+                onDispose {
+                    if (previousDestination?.destination?.route == "cart") {
+                        coordinator.resetState()
+                    }
+                }
+            }
+            val amountParam = backStackEntry.arguments?.getString("amount") ?: "0.0"
+            val amountDouble = amountParam.toDoubleOrNull() ?: 0.0
+            val vm = coordinator.getCardPaymentViewModel()
+
+            CardCheckoutView(
+                amount = amountDouble,
+                cardPaymentViewModel = vm,
+                onOrderCompleted = { orderId ->
+                    navController.navigate("orderComplete/$orderId")
+                }
+            )
+        }
+
         composable("orderComplete/{orderId}") { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId") ?: "Unknown"
             OrderCompleteView(orderID = orderId) {
                 onDismissComplete()
-                navController.popBackStack()
+                navController.popBackStack(route = "cart", inclusive = false)
             }
         }
     }
@@ -50,6 +77,12 @@ fun CheckoutFlow(
     when (checkoutState) {
         is CheckoutState.Loading -> {
             LoadingOverlay(checkoutState.message)
+        }
+        is CheckoutState.CardCheckout -> {
+            // Navigate to card checkout
+            LaunchedEffect(checkoutState) {
+                navController.navigate("cardCheckout/${checkoutState.amount}")
+            }
         }
         is CheckoutState.OrderComplete -> {
             // If the coordinator says we’re “complete”, navigate to orderComplete

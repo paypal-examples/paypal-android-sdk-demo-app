@@ -1,23 +1,25 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.main
 
 import android.content.Context
 import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.firstapp.paypaldemo.cardcheckout.CardPaymentViewModel
+import com.firstapp.paypaldemo.paypalcheckout.PayPalViewModel
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
+import com.paypal.android.cardpayments.CardClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-// clientID may also be fetched from backend
-const val CLIENT_ID =
-    "AQ04yLjwYNK_cZvD-S-HZY1TwV22AygaJ0JSiYdyqTcfcwRL6i8thQxKdTCZROmUou86wza_xoDk1WGz"
+const val CLIENT_ID = "AVhcAP8TDu5PFeAw97M8187g-iYQW8W0AhvvXaMaWPojJRGGkunX8r-fyPkKGCv09P83KC2dijKLKwyz"
 
 /**
  * Simple sealed class representing states we might show:
  *  - Idle (Cart)
+ *  - CardCheckout
  *  - Order Complete
  *  - Error
  *
@@ -26,6 +28,7 @@ const val CLIENT_ID =
 sealed class CheckoutState {
     object Idle : CheckoutState()
     data class Loading(val message: String = "Loading...") : CheckoutState()
+    data class CardCheckout(val amount: Double) : CheckoutState()
     data class OrderComplete(val orderId: String) : CheckoutState()
     data class Error(val message: String) : CheckoutState()
 }
@@ -38,6 +41,12 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     // The underlying PayPalWebCheckoutClient (depends on an Activity context).
     // We'll set it on PayPal button press from CartView
     private var payPalClient: PayPalWebCheckoutClient? = null
+
+    // The underlying CardClient
+    // We'll set it on Card button press from CartView
+    private var cardClient: CardClient? = null
+
+    private var cardPaymentViewModel: CardPaymentViewModel? = null
 
     // The specialized PayPalViewModel. We'll create it once we have a payPalClient.
     private var payPalViewModel: PayPalViewModel? = null
@@ -82,6 +91,22 @@ class CheckoutCoordinatorViewModel : ViewModel() {
         }
     }
 
+    fun initializeCardClient(context: Context) {
+        cardClient = null
+        cardPaymentViewModel = null
+
+        val coreConfig = CoreConfig(CLIENT_ID)
+        CardClient(context, coreConfig).let { client ->
+            cardClient = client
+            cardPaymentViewModel = CardPaymentViewModel(client)
+        }
+    }
+
+    fun startCardCheckout(amount: Double) {
+        _checkoutState.value = CheckoutState.CardCheckout(amount)
+    }
+
+
     /**
      * Called from MainActivity.onNewIntent
      * to finish the PayPal flow after the Chrome Custom Tab returns.
@@ -105,16 +130,37 @@ class CheckoutCoordinatorViewModel : ViewModel() {
         }
     }
 
+    fun getCardPaymentViewModel(): CardPaymentViewModel? {
+        return cardPaymentViewModel
+    }
+
+    // For final success
+    fun onCardCheckoutComplete(orderId: String) {
+        _checkoutState.value = CheckoutState.OrderComplete(orderId)
+    }
+
+    // If we want to show an error from the card flow
+    fun showError(message: String) {
+        _checkoutState.value = CheckoutState.Error(message)
+    }
+
+
     /**
      * Reset or clear any error/completion state if user navigates away.
      */
     fun resetState() {
         _checkoutState.value = CheckoutState.Idle
+        payPalClient = null
+        payPalViewModel = null
+        cardClient = null
+        cardPaymentViewModel = null
     }
 
     override fun onCleared() {
         super.onCleared()
         payPalClient = null
         payPalViewModel = null
+        cardClient = null
+        cardPaymentViewModel = null
     }
 }

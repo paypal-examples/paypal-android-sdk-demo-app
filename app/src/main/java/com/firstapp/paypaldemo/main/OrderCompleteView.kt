@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
 
 @Composable
 fun OrderCompleteView (
@@ -32,7 +31,7 @@ fun OrderCompleteView (
         Text("Order Complete", fontWeight = FontWeight.Bold, fontSize = 25.sp)
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Thank you for your order! Your order number is #123456789.")
+        Text("Thank you for your order! Your order number is $orderID.")
         Spacer(modifier = Modifier.weight(1.0f))
         Button(
             onClick = onDone,
