@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.Main
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -19,6 +19,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
+import com.firstapp.paypaldemo.CardCheckout.CardCheckoutView
 
 @Composable
 fun CheckoutFlow(

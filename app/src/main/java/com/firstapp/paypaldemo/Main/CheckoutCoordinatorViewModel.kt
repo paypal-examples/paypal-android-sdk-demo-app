@@ -1,10 +1,12 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.Main
 
 import android.content.Context
 import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.firstapp.paypaldemo.CardCheckout.CardPaymentViewModel
+import com.firstapp.paypaldemo.PayPalCheckout.PayPalViewModel
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
 import com.paypal.android.cardpayments.CardClient
@@ -17,6 +19,7 @@ const val CLIENT_ID = "AVhcAP8TDu5PFeAw97M8187g-iYQW8W0AhvvXaMaWPojJRGGkunX8r-fy
 /**
  * Simple sealed class representing states we might show:
  *  - Idle (Cart)
+ *  - CardCheckout
  *  - Order Complete
  *  - Error
  *

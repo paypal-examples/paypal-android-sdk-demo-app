@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.CardCheckout
 
 import androidx.lifecycle.ViewModel
 import com.paypal.android.cardpayments.Card

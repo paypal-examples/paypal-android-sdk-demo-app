@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.CardCheckout
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping

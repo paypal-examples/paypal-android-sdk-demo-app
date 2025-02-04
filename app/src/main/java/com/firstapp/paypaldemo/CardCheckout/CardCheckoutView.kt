@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.CardCheckout
 
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*

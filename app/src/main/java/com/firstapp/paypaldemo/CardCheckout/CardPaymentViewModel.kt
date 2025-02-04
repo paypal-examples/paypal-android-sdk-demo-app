@@ -1,8 +1,11 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.CardCheckout
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.firstapp.paypaldemo.Service.Amount
+import com.firstapp.paypaldemo.Service.DemoMerchantAPI
+import com.firstapp.paypaldemo.Service.PurchaseUnit
 import com.paypal.android.cardpayments.CardClient
 import com.paypal.android.cardpayments.Card
 import com.paypal.android.cardpayments.CardApproveOrderResult
@@ -74,7 +77,8 @@ class CardPaymentViewModel(
                             // 3) Capture on your server
                             viewModelScope.launch {
                                 try {
-                                    val finalOrder = DemoMerchantAPI.completeOrder(orderId, "CAPTURE")
+                                    val finalOrder =
+                                        DemoMerchantAPI.completeOrder(orderId, "CAPTURE")
                                     println("✅ Order captured: ${finalOrder.id}, status=${finalOrder.status}")
                                     isLoading = false
                                     onSuccess(finalOrder.id)

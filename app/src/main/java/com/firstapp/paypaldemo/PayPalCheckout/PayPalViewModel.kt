@@ -1,7 +1,10 @@
-package com.firstapp.paypaldemo
+package com.firstapp.paypaldemo.PayPalCheckout
 
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
+import com.firstapp.paypaldemo.Service.Amount
+import com.firstapp.paypaldemo.Service.DemoMerchantAPI
+import com.firstapp.paypaldemo.Service.PurchaseUnit
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
 import com.paypal.android.paypalwebpayments.PayPalPresentAuthChallengeResult
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutFinishStartResult
@@ -81,7 +84,7 @@ class PayPalViewModel(
                 if (orderId == null) {
                     onFailure("received success but PayPal returned a null orderId")
                 } else {
-                    val finalOrder = DemoMerchantAPI.completeOrder(orderId, "CAPTURE" )
+                    val finalOrder = DemoMerchantAPI.completeOrder(orderId, "CAPTURE")
                     println("✅ captured order: ${finalOrder.id}")
                     onSuccess(finalOrder.id)
                 }
