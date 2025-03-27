@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PayPalDemo</string>
+    <string name="title_activity_simple">SimpleActivity</string>
 </resources>
