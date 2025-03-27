@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import com.firstapp.paypaldemo.service.Order
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.corepayments.Environment
 import com.paypal.android.paymentbuttons.PayPalButton
@@ -27,7 +28,7 @@ data class CartItem(val name: String, val price: Double)
 class API {
 
     suspend fun createOrder(): Result<Order> {
-        // TODO: create 
+        // TODO: create
         return Result.failure(Throwable("could not create order."))
     }
 }
