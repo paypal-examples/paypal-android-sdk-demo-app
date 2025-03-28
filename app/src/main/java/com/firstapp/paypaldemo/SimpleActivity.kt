@@ -33,10 +33,14 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 // CartItem.kt
-data class CartItem(val name: String, val price: Double)
+data class OrderItem(val id: String, val name: String, val price: Double)
 
 // OrderRequest.kt
-data class OrderRequest(val amount: Double)
+data class OrderRequest(
+    val items: List<OrderItem>,
+    val currencyCode: String = "USD",
+    val paymentIntent: String = "CAPTURE"
+)
 
 // API.kt
 interface API {
@@ -68,9 +72,9 @@ class SimpleActivity : ComponentActivity() {
         PayPalWebCheckoutClient(context = this, configuration = config, urlScheme = urlScheme)
 
     val api = createAPI("https://api.myserver.com")
-    val cartItems = listOf(
-        CartItem(name = "Selkirk Pro Amped Air", price = 179.99),
-        CartItem(name = "Joola Ben Johns", price = 229.99)
+    val items = listOf(
+        OrderItem(id = "123", name = "Selkirk Pro Amped Air", price = 179.99),
+        OrderItem(id = "456", name = "Joola Ben Johns", price = 229.99)
     )
 
     var authState: String? = null
@@ -81,10 +85,15 @@ class SimpleActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    CartView(
-                        modifier = Modifier.padding(innerPadding),
-                        onPayPalButtonClick = { launchPayPal() }
-                    )
+                    Column(modifier = Modifier.padding(innerPadding)) {
+                        AndroidView(
+                            factory = { context ->
+                                PayPalButton(context).apply { setOnClickListener { launchPayPal() } }
+                            },
+                            update = { button -> button.color = PayPalButtonColor.BLUE },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
@@ -102,8 +111,7 @@ class SimpleActivity : ComponentActivity() {
 
     private fun launchPayPal() {
         lifecycleScope.launch {
-            val amount = cartItems.sumOf { it.price }
-            val request = OrderRequest(amount = amount)
+            val request = OrderRequest(items = items)
             val response = api.createOrder(request)
             if (response.isSuccessful) {
                 val order = response.body()
@@ -132,7 +140,12 @@ class SimpleActivity : ComponentActivity() {
         when (val checkoutResult = payPalClient.finishStart(intent, state)) {
             is PayPalWebCheckoutFinishStartResult.Success -> {
                 // Capture or authorize order on your server
-                api.captureOrder(checkoutResult.orderId!!)
+                val response = api.captureOrder(checkoutResult.orderId!!)
+                if (response.isSuccessful) {
+                    TODO("show order capture success to user")
+                } else {
+                    TODO("show order capture failure to user")
+                }
                 discardAuthState()
             }
 
