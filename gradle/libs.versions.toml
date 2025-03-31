@@ -10,8 +10,8 @@ activityCompose = "1.8.0"
 composeBom = "2024.04.01"
 navigationCompose = "2.7.5"
 paypalWebPayments = "2.0.0-beta2"
-cardPayments = "2.0.0-beta2"
-paymentButtons = "2.0.0-beta2"
+cardPayments = "2.0.0"
+paymentButtons = "2.0.0"
 squareRetrofit2 = "2.11.0"
 
 [libraries]
