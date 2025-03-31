@@ -166,7 +166,9 @@ class SimpleActivity : ComponentActivity() {
         cardClient.approveOrder(cardRequest = cardRequest) { approveOrderResult ->
             when (approveOrderResult) {
                 is CardApproveOrderResult.Success -> captureOrder(approveOrderResult.orderId)
-                is CardApproveOrderResult.AuthorizationRequired -> presentApproveOrderAuthChallenge()
+                is CardApproveOrderResult.AuthorizationRequired ->
+                    presentApproveOrderAuthChallenge(approveOrderResult.authChallenge)
+
                 is CardApproveOrderResult.Failure -> TODO("handle approve order error")
             }
         }
