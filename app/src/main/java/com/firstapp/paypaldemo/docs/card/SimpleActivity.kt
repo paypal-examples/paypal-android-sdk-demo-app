@@ -126,7 +126,7 @@ class SimpleActivity : ComponentActivity() {
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text("Checkout")
+                            Text("Complete Purchase")
                         }
                     }
                 }
