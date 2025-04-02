@@ -2,20 +2,42 @@ package com.firstapp.paypaldemo.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.viewinterop.AndroidView
 import com.firstapp.paypaldemo.R
+import com.paypal.android.paymentbuttons.PayPalButton
+import com.paypal.android.paymentbuttons.PayPalButtonColor
+import com.paypal.android.paymentbuttons.PayPalButtonLabel
+import com.paypal.android.paymentbuttons.PaymentButtonSize
 
 data class Item(
     val name: String,
@@ -28,6 +50,8 @@ fun CartView(
     onPayWithPayPal: (Double) -> Unit,
     onPayWithCard: (Double) -> Unit
 ) {
+    val payPalButtonCornerRadius = with(LocalDensity.current) { 10.dp.toPx() }
+
     val items = listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt))
     val totalAmount = items.sumOf { it.amount }
 
@@ -51,7 +75,7 @@ fun CartView(
             CartItemView(item)
         }
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .fillMaxWidth(),
@@ -76,11 +100,17 @@ fun CartView(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
-        PaymentButton(
-            text = "Pay with PayPal",
-            backgroundColor = Color(0xFFFFB700),
-            onClick = { onPayWithPayPal(totalAmount) }
+        AndroidView(
+            factory = { context ->
+                PayPalButton(context).apply { setOnClickListener { onPayWithPayPal(totalAmount) } }
+            },
+            update = { button ->
+                button.color = PayPalButtonColor.BLUE
+                button.label = PayPalButtonLabel.PAY
+                button.size = PaymentButtonSize.LARGE
+                button.customCornerRadius = payPalButtonCornerRadius
+            },
+            modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
         PaymentButton(
@@ -138,7 +168,6 @@ fun CartItemView(item: Item) {
 fun PaymentButton(
     text: String,
     backgroundColor: Color,
-    iconRes: Int? = null,
     onClick: () -> Unit
 ) {
     Button(
@@ -153,15 +182,6 @@ fun PaymentButton(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            if (text.contains("PayPal")) {
-                Image(
-                    painter = painterResource(id = R.drawable.paypal_color_monogram3x),
-                    contentDescription = "PayPal logo",
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp)
-                )
-            }
             Text(
                 text = text,
                 fontSize = 18.sp,
@@ -179,8 +199,8 @@ fun CartViewPreview() {
     MaterialTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             CartView(
-                onPayWithCard = { amount -> },
-                onPayWithPayPal = { amount -> }
+                onPayWithCard = {},
+                onPayWithPayPal = {}
             )
         }
     }
