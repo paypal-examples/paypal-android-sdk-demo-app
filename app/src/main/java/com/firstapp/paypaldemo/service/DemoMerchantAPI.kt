@@ -20,18 +20,7 @@ import java.net.URL
 object DemoMerchantAPI {
 
     // Example base URL to your Heroku or any server that can create orders
-    private const val BASE_URL = "https://paypal-mobile-sdk-demo-server-8dacbcd617ba.herokuapp.com"
-
-    /**
-     * Example function to fetch a client ID from your server's `/client_id` endpoint.
-     * If you don't need dynamic client IDs, you can skip this.
-     */
-    suspend fun getClientID(): String {
-        val endpoint = "$BASE_URL/client_id"
-        val responseData = makeHttpRequest(urlString = endpoint, method = "GET")
-        val json = JSONObject(responseData)
-        return json.getString("clientID") // depends on your server’s JSON structure
-    }
+    private const val BASE_URL = "https://ppcp-mobile-demo-sandbox-87bbd7f0a27f.herokuapp.com"
 
     /**
      * Example function to create an order on the merchant server.
