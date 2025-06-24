@@ -63,7 +63,7 @@ object DemoMerchantAPI {
         intent: String // "CAPTURE" or "AUTHORIZE"
     ): Order {
 
-        val endpoint = "$BASE_URL/orders/$orderID/${intent.lowercase()}"
+        val endpoint = "$BASE_URL/orders/$orderID/$intent"
 
         val responseData = makeHttpRequest(
             urlString = endpoint,
