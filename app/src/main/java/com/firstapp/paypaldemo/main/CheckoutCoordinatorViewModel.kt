@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-const val CLIENT_ID = "AVhcAP8TDu5PFeAw97M8187g-iYQW8W0AhvvXaMaWPojJRGGkunX8r-fyPkKGCv09P83KC2dijKLKwyz"
+const val CLIENT_ID = "AQTfw2irFfemo-eWG4H5UY-b9auKihUpXQ2Engl4G1EsHJe2mkpfUv_SN3Mba0v3CfrL6Fk_ecwv9EOo"
 
 /**
  * Simple sealed class representing states we might show:
