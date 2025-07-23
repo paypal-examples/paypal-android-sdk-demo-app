@@ -1,32 +1,21 @@
 package com.firstapp.paypaldemo.paypalcheckout
 
-import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
-import com.firstapp.paypaldemo.main.CLIENT_ID
 import com.firstapp.paypaldemo.service.Amount
 import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import com.firstapp.paypaldemo.service.PurchaseUnit
-import com.paypal.android.corepayments.CoreConfig
-import com.paypal.android.paypalwebpayments.PayPalPresentAuthChallengeResult
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
+import com.paypal.android.paypalwebpayments.PayPalPresentAuthChallengeResult
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutFinishStartResult
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutFundingSource
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutRequest
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 
-@HiltViewModel
-class PayPalViewModel @Inject constructor(
-    @ApplicationContext context: Context
+class PayPalViewModel(
+    private val payPalClient: PayPalWebCheckoutClient
 ) : ViewModel() {
 
     private var authState: String? = null
-
-    val coreConfig = CoreConfig(CLIENT_ID)
-    private val payPalClient =
-        PayPalWebCheckoutClient(context, coreConfig, "com.firstapp.paypaldemo")
 
     /**
      * Launches the PayPal web checkout flow via Braintree browser switch library
@@ -70,7 +59,7 @@ class PayPalViewModel @Inject constructor(
                     onFailure("Unexpected error during checkout.")
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: Exception){
             onFailure("❌ Failed to create order on merchant server: ${e.message}")
         }
     } // startPayPalCheckout
@@ -100,15 +89,12 @@ class PayPalViewModel @Inject constructor(
                     onSuccess(finalOrder.id)
                 }
             }
-
             is PayPalWebCheckoutFinishStartResult.Failure -> {
                 onFailure(result.error.toString())
             }
-
             is PayPalWebCheckoutFinishStartResult.Canceled -> {
                 onCanceled()
             }
-
             else -> {
                 onFailure("Unexpected error occurred while completing the checkout.")
             }
