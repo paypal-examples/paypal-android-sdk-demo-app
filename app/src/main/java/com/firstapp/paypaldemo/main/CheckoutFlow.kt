@@ -26,6 +26,7 @@ import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
 @Composable
 fun CheckoutFlow(
     onPayWithPayPal: (Double) -> Unit,
+//    onPayWithCard: (Double) -> Unit,
     checkoutState: CheckoutState,
     onDismissError: () -> Unit,
     onDismissComplete: () -> Unit
