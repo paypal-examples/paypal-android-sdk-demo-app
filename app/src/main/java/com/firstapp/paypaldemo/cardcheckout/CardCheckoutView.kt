@@ -11,7 +11,6 @@ import androidx.activity.ComponentActivity
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 /**
  * A composable for card checkout
@@ -106,18 +105,16 @@ fun CardCheckoutView(
                     isLoading = true
                     if (cardPaymentViewModel != null) {
                         cardPaymentViewModel.checkoutWithCard(
-                            activity = activity,
                             card = card,
                             amount = amount,
                             onSuccess = { orderId ->
                                 isLoading = false
                                 onOrderCompleted(orderId)
-                            },
-                            onFailure = { err ->
-                                isLoading = false
-                                errorMessage = err
                             }
-                        )
+                        ) { err ->
+                            isLoading = false
+                            errorMessage = err
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
