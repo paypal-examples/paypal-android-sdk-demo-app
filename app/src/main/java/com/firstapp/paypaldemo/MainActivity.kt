@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo.main
+package com.firstapp.paypaldemo
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
+import com.firstapp.paypaldemo.main.CheckoutCoordinatorViewModel
+import com.firstapp.paypaldemo.main.CheckoutFlow
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 
 class MainActivity : ComponentActivity() {
