@@ -12,6 +12,7 @@ navigationCompose = "2.7.5"
 payPalSdk = "2.0.0"
 androidHilt = "2.57"
 ksp = "2.2.0-2.0.2"
+hiltNavigationCompose = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,7 @@ paypal-cardpayments = { group = "com.paypal.android", name = "card-payments", ve
 paypal-paymentbuttons = { group = "com.paypal.android", name = "payment-buttons", version.ref = "payPalSdk" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "androidHilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "androidHilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
