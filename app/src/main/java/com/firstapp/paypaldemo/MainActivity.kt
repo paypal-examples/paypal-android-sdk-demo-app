@@ -13,7 +13,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 import androidx.core.net.toUri
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val coordinatorViewModel: CheckoutCoordinatorViewModel by viewModels()
