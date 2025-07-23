@@ -1,7 +1,6 @@
 package com.firstapp.paypaldemo.cardcheckout
 
 import android.content.Context
-import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firstapp.paypaldemo.main.CLIENT_ID
@@ -32,8 +31,7 @@ class CardPaymentViewModel @Inject constructor(
     @ApplicationContext context: Context
 ) : ViewModel() {
 
-    private val coreConfig = CoreConfig(CLIENT_ID)
-    private val cardClient = CardClient(context, coreConfig)
+    private val cardClient = CardClient(context, CoreConfig(CLIENT_ID))
 
     var isLoading: Boolean = false
         private set
@@ -44,7 +42,6 @@ class CardPaymentViewModel @Inject constructor(
      * The main “checkoutWithCard” function, using the validated Card details.
      */
     fun checkoutWithCard(
-        activity: ComponentActivity,
         card: Card,
         amount: Double,
         onSuccess: (String) -> Unit,
