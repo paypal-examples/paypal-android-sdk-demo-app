@@ -1,18 +1,23 @@
 package com.firstapp.paypaldemo.cardcheckout
 
+import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.firstapp.paypaldemo.main.CLIENT_ID
 import com.firstapp.paypaldemo.service.Amount
 import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import com.firstapp.paypaldemo.service.PurchaseUnit
-import com.paypal.android.cardpayments.CardClient
 import com.paypal.android.cardpayments.Card
 import com.paypal.android.cardpayments.CardApproveOrderResult
+import com.paypal.android.cardpayments.CardClient
 import com.paypal.android.cardpayments.CardRequest
 import com.paypal.android.cardpayments.threedsecure.SCA
+import com.paypal.android.corepayments.CoreConfig
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 /**
  * A separate ViewModel that:
@@ -22,9 +27,13 @@ import java.lang.Exception
  *
  * No 3DS logic here: If a flow requires 3DS, it won't be handled.
  */
-class CardPaymentViewModel(
-    private val cardClient: CardClient
+@HiltViewModel
+class CardPaymentViewModel @Inject constructor(
+    @ApplicationContext context: Context
 ) : ViewModel() {
+
+    private val coreConfig = CoreConfig(CLIENT_ID)
+    private val cardClient = CardClient(context, coreConfig)
 
     var isLoading: Boolean = false
         private set
@@ -68,7 +77,7 @@ class CardPaymentViewModel(
                     sdkCard,
                     returnUrl = "com.firstapp.paypal.demo://example.com",
                     sca = SCA.SCA_WHEN_REQUIRED
-                    )
+                )
 
                 cardClient.approveOrder(request) { approveResult ->
                     when (approveResult) {
@@ -89,6 +98,7 @@ class CardPaymentViewModel(
                                 }
                             }
                         }
+
                         is CardApproveOrderResult.AuthorizationRequired -> {
                             // 3DS flow required if the user had set sca, but we said “no 3ds,”
                             // so we can treat it as an error or skip handling it:
@@ -96,6 +106,7 @@ class CardPaymentViewModel(
                             errorMessage = "Auth required but 3DS not supported in this example."
                             onFailure(errorMessage)
                         }
+
                         is CardApproveOrderResult.Failure -> {
                             isLoading = false
                             errorMessage = "Card approve failed: ${approveResult.error.message}"

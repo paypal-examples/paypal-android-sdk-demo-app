@@ -10,6 +10,8 @@ import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 /**
  * A composable for card checkout
@@ -17,8 +19,8 @@ import androidx.compose.ui.Alignment
 @Composable
 fun CardCheckoutView(
     amount: Double,
-    cardPaymentViewModel: CardPaymentViewModel?,
-    onOrderCompleted: (String) -> Unit
+    onOrderCompleted: (String) -> Unit,
+    cardPaymentViewModel: CardPaymentViewModel = hiltViewModel()
 ) {
     // We'll create or retrieve a validation VM
     val validationVM = remember { CardCheckoutValidationViewModel() }

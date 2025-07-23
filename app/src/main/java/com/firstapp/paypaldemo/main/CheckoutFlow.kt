@@ -28,7 +28,6 @@ import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
 @Composable
 fun CheckoutFlow(
     onPayWithPayPal: (Double) -> Unit,
-    onPayWithCard: (Double) -> Unit,
     onPayWithLink: (Double) -> Unit,
     checkoutState: CheckoutState,
     onDismissError: () -> Unit,
@@ -43,7 +42,6 @@ fun CheckoutFlow(
         composable("cart") {
             CartView(
                 onPayWithPayPal = onPayWithPayPal,
-                onPayWithCard = onPayWithCard,
                 onPayWithLink = onPayWithLink
             )
         }
@@ -60,11 +58,8 @@ fun CheckoutFlow(
             }
             val amountParam = backStackEntry.arguments?.getString("amount") ?: "0.0"
             val amountDouble = amountParam.toDoubleOrNull() ?: 0.0
-            val vm = coordinator.getCardPaymentViewModel()
-
             CardCheckoutView(
                 amount = amountDouble,
-                cardPaymentViewModel = vm,
                 onOrderCompleted = { orderId ->
                     navController.navigate("orderComplete/$orderId")
                 }
@@ -92,13 +87,6 @@ fun CheckoutFlow(
     when (checkoutState) {
         is CheckoutState.Loading -> {
             LoadingOverlay(checkoutState.message)
-        }
-
-        is CheckoutState.CardCheckout -> {
-            // Navigate to card checkout
-            LaunchedEffect(checkoutState) {
-                navController.navigate("cardCheckout/${checkoutState.amount}")
-            }
         }
 
         is CheckoutState.OrderComplete -> {

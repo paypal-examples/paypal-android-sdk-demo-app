@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firstapp.paypaldemo.cardcheckout.CardPaymentViewModel
 import com.firstapp.paypaldemo.paypalcheckout.PayPalViewModel
 import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import com.paypal.android.cardpayments.CardClient
@@ -33,7 +32,6 @@ const val CLIENT_ID =
 sealed class CheckoutState {
     object Idle : CheckoutState()
     data class Loading(val message: String = "Loading...") : CheckoutState()
-    data class CardCheckout(val amount: Double) : CheckoutState()
     data class OrderComplete(val orderId: String) : CheckoutState()
     data class Error(val message: String) : CheckoutState()
     data class PaymentLinkComplete(val uri: Uri): CheckoutState()
@@ -49,12 +47,6 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     // The underlying PayPalWebCheckoutClient (depends on an Activity context).
     // We'll set it on PayPal button press from CartView
     private var payPalClient: PayPalWebCheckoutClient? = null
-
-    // The underlying CardClient
-    // We'll set it on Card button press from CartView
-    private var cardClient: CardClient? = null
-
-    private var cardPaymentViewModel: CardPaymentViewModel? = null
 
     // The specialized PayPalViewModel. We'll create it once we have a payPalClient.
     private var payPalViewModel: PayPalViewModel? = null
@@ -99,21 +91,6 @@ class CheckoutCoordinatorViewModel : ViewModel() {
         }
     }
 
-    fun initializeCardClient(context: Context) {
-        cardClient = null
-        cardPaymentViewModel = null
-
-        val coreConfig = CoreConfig(CLIENT_ID)
-        CardClient(context, coreConfig).let { client ->
-            cardClient = client
-            cardPaymentViewModel = CardPaymentViewModel(client)
-        }
-    }
-
-    fun startCardCheckout(amount: Double) {
-        _checkoutState.value = CheckoutState.CardCheckout(amount)
-    }
-
     fun openPaymentLink(activity: ComponentActivity, uri: Uri) {
         val intent = CustomTabsIntent.Builder().build()
         intent.launchUrl(activity, uri)
@@ -154,10 +131,6 @@ class CheckoutCoordinatorViewModel : ViewModel() {
         }
     }
 
-    fun getCardPaymentViewModel(): CardPaymentViewModel? {
-        return cardPaymentViewModel
-    }
-
     // For final success
     fun onCardCheckoutComplete(orderId: String) {
         _checkoutState.value = CheckoutState.OrderComplete(orderId)
@@ -176,15 +149,11 @@ class CheckoutCoordinatorViewModel : ViewModel() {
         _checkoutState.value = CheckoutState.Idle
         payPalClient = null
         payPalViewModel = null
-        cardClient = null
-        cardPaymentViewModel = null
     }
 
     override fun onCleared() {
         super.onCleared()
         payPalClient = null
         payPalViewModel = null
-        cardClient = null
-        cardPaymentViewModel = null
     }
 }
