@@ -36,10 +36,6 @@ class MainActivity : ComponentActivity() {
                             coordinatorViewModel.initializePayPalClient(this.applicationContext)
                             coordinatorViewModel.startPayPalCheckout(this, amount)
                         },
-//                        onPayWithCard = { amount ->
-//                            coordinatorViewModel.initializeCardClient(this.applicationContext)
-//                            coordinatorViewModel.startCardCheckout(amount)
-//                        },
                         onPayWithLink = { amount ->
                             val uri =
                                 "https://www.sandbox.paypal.com/ncp/payment/BFXRZ54VKCAQ6".toUri()
