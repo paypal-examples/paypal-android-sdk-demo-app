@@ -30,10 +30,6 @@ class MainActivity : ComponentActivity() {
                         coordinatorViewModel.initializePayPalClient(this.applicationContext)
                         coordinatorViewModel.startPayPalCheckout(this, amount)
                     },
-//                    onPayWithCard = { amount ->
-//                        coordinatorViewModel.initializeCardClient(this.applicationContext)
-//                        coordinatorViewModel.startCardCheckout(amount)
-//                    },
                     checkoutState = checkoutState.value,
                     onDismissError = {
                         coordinatorViewModel.resetState()
