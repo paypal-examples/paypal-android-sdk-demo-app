@@ -1,30 +1,31 @@
 package com.firstapp.paypaldemo.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.dp
 import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
 
 @Composable
 fun CheckoutFlow(
     onPayWithPayPal: (Double) -> Unit,
-    onPayWithCard: (Double) -> Unit,
     checkoutState: CheckoutState,
     onDismissError: () -> Unit,
     onDismissComplete: () -> Unit
@@ -37,7 +38,7 @@ fun CheckoutFlow(
         composable("cart") {
             CartView(
                 onPayWithPayPal = onPayWithPayPal,
-                onPayWithCard = onPayWithCard
+                onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") }
             )
         }
 
@@ -53,11 +54,8 @@ fun CheckoutFlow(
             }
             val amountParam = backStackEntry.arguments?.getString("amount") ?: "0.0"
             val amountDouble = amountParam.toDoubleOrNull() ?: 0.0
-            val vm = coordinator.getCardPaymentViewModel()
-
             CardCheckoutView(
                 amount = amountDouble,
-                cardPaymentViewModel = vm,
                 onOrderCompleted = { orderId ->
                     navController.navigate("orderComplete/$orderId")
                 }
@@ -78,12 +76,7 @@ fun CheckoutFlow(
         is CheckoutState.Loading -> {
             LoadingOverlay(checkoutState.message)
         }
-        is CheckoutState.CardCheckout -> {
-            // Navigate to card checkout
-            LaunchedEffect(checkoutState) {
-                navController.navigate("cardCheckout/${checkoutState.amount}")
-            }
-        }
+
         is CheckoutState.OrderComplete -> {
             // If the coordinator says we’re “complete”, navigate to orderComplete
             LaunchedEffect(checkoutState) {
@@ -91,6 +84,7 @@ fun CheckoutFlow(
                 navController.navigate("orderComplete/$orderId")
             }
         }
+
         is CheckoutState.Error -> {
             // Show an alert
             AlertDialog(
@@ -104,6 +98,7 @@ fun CheckoutFlow(
                 }
             )
         }
+
         else -> {} // Idle: do nothing
     }
 }

@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo.main
+package com.firstapp.paypaldemo
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
+import com.firstapp.paypaldemo.main.CheckoutCoordinatorViewModel
+import com.firstapp.paypaldemo.main.CheckoutFlow
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val coordinatorViewModel: CheckoutCoordinatorViewModel by viewModels()
@@ -25,10 +29,6 @@ class MainActivity : ComponentActivity() {
                     onPayWithPayPal = { amount ->
                         coordinatorViewModel.initializePayPalClient(this.applicationContext)
                         coordinatorViewModel.startPayPalCheckout(this, amount)
-                    },
-                    onPayWithCard = { amount ->
-                        coordinatorViewModel.initializeCardClient(this.applicationContext)
-                        coordinatorViewModel.startCardCheckout(amount)
                     },
                     checkoutState = checkoutState.value,
                     onDismissError = {
