@@ -1,21 +1,34 @@
 package com.firstapp.paypaldemo.paypalcheckout
 
+import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.firstapp.paypaldemo.main.CLIENT_ID
 import com.firstapp.paypaldemo.service.Amount
 import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import com.firstapp.paypaldemo.service.PurchaseUnit
-import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
+import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.paypalwebpayments.PayPalPresentAuthChallengeResult
+import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutFinishStartResult
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutFundingSource
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutRequest
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 
-class PayPalViewModel(
-    private val payPalClient: PayPalWebCheckoutClient
+@HiltViewModel
+class PayPalViewModel @Inject constructor(
+    @ApplicationContext context: Context
 ) : ViewModel() {
 
     private var authState: String? = null
+
+    val coreConfig = CoreConfig(CLIENT_ID)
+    val payPalClient =
+        PayPalWebCheckoutClient(context, coreConfig, "com.firstapp.paypaldemo")
 
     /**
      * Launches the PayPal web checkout flow via Braintree browser switch library
@@ -23,44 +36,46 @@ class PayPalViewModel(
      * onSuccess means the user was successfully sent to the browser.
      * The final 'finish' must still happen in handleOnNewIntent => finishPayPalCheckout.
      */
-    suspend fun startPayPalCheckout(
-        amount: Double,
-        activity: ComponentActivity,
-        onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
-    ) {
-        try {
-            val order = DemoMerchantAPI.createOrder(
-                intent = "CAPTURE",
-                purchaseUnits = listOf(
-                    PurchaseUnit(
-                        amount = Amount(currencyCode = "USD", value = amount.toString())
+    fun startPayPalCheckout(amount: Double, activity: ComponentActivity) {
+        viewModelScope.launch {
+            try {
+                val order = DemoMerchantAPI.createOrder(
+                    intent = "CAPTURE",
+                    purchaseUnits = listOf(
+                        PurchaseUnit(
+                            amount = Amount(currencyCode = "USD", value = amount.toString())
+                        )
                     )
                 )
-            )
-            println("✅ Created order ${order.id}, status: ${order.status}")
+                println("✅ Created order ${order.id}, status: ${order.status}")
 
-            val request = PayPalWebCheckoutRequest(
-                orderId = order.id,
-                fundingSource = PayPalWebCheckoutFundingSource.PAYPAL
-            )
+                val request = PayPalWebCheckoutRequest(
+                    orderId = order.id,
+                    fundingSource = PayPalWebCheckoutFundingSource.PAYPAL
+                )
 
-            when (val result = payPalClient.start(activity, request)) {
-                is PayPalPresentAuthChallengeResult.Success -> {
-                    authState = result.authState
-                    onSuccess()
+                when (val result = payPalClient.start(activity, request)) {
+                    is PayPalPresentAuthChallengeResult.Success -> {
+                        authState = result.authState
+                        // TODO: update UIState
+//                    onSuccess()
+                    }
+
+                    is PayPalPresentAuthChallengeResult.Failure -> {
+                        // TODO: update UIState
+//                    onFailure(result.error.toString())
+                    }
+
+                    else -> {
+                        // TODO: update UIState
+//                    onFailure("Unexpected error during checkout.")
+                    }
                 }
-
-                is PayPalPresentAuthChallengeResult.Failure -> {
-                    onFailure(result.error.toString())
-                }
-
-                else -> {
-                    onFailure("Unexpected error during checkout.")
-                }
+            } catch (e: Exception) {
+                // TODO: update UIState
+//            onFailure("❌ Failed to create order on merchant server: ${e.message}")
             }
-        } catch (e: Exception){
-            onFailure("❌ Failed to create order on merchant server: ${e.message}")
+
         }
     } // startPayPalCheckout
 
@@ -89,12 +104,15 @@ class PayPalViewModel(
                     onSuccess(finalOrder.id)
                 }
             }
+
             is PayPalWebCheckoutFinishStartResult.Failure -> {
                 onFailure(result.error.toString())
             }
+
             is PayPalWebCheckoutFinishStartResult.Canceled -> {
                 onCanceled()
             }
+
             else -> {
                 onFailure("Unexpected error occurred while completing the checkout.")
             }

@@ -25,7 +25,6 @@ import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
 
 @Composable
 fun CheckoutFlow(
-    onPayWithPayPal: (Double) -> Unit,
     checkoutState: CheckoutState,
     onDismissError: () -> Unit,
     onDismissComplete: () -> Unit
@@ -37,7 +36,6 @@ fun CheckoutFlow(
     NavHost(navController = navController, startDestination = "cart") {
         composable("cart") {
             CartView(
-                onPayWithPayPal = onPayWithPayPal,
                 onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") }
             )
         }

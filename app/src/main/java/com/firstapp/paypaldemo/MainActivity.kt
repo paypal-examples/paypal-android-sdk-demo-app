@@ -26,10 +26,6 @@ class MainActivity : ComponentActivity() {
 
                 // Basic “router” approach or wrap in your NavHost:
                 CheckoutFlow(
-                    onPayWithPayPal = { amount ->
-                        coordinatorViewModel.initializePayPalClient(this.applicationContext)
-                        coordinatorViewModel.startPayPalCheckout(this, amount)
-                    },
                     checkoutState = checkoutState.value,
                     onDismissError = {
                         coordinatorViewModel.resetState()
