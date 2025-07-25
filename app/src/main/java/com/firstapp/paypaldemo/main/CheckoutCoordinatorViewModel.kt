@@ -43,51 +43,29 @@ private const val TAG = "CheckoutCoordinatorViewModel"
  */
 class CheckoutCoordinatorViewModel : ViewModel() {
 
-    // The underlying PayPalWebCheckoutClient (depends on an Activity context).
-    // We'll set it on PayPal button press from CartView
-    private var payPalClient: PayPalWebCheckoutClient? = null
-
-    // The specialized PayPalViewModel. We'll create it once we have a payPalClient.
-    private var payPalViewModel: PayPalViewModel? = null
-
     // Live state (or “flow state”) to help the UI know what to display.
     private val _checkoutState = MutableStateFlow<CheckoutState>(CheckoutState.Idle)
     val checkoutState: StateFlow<CheckoutState> = _checkoutState
-
-    /**
-     * Initialize or update the PayPal client any time we have a fresh Activity reference.
-     * Alternatively, you can set up the client once in onCreate and pass it here.
-     */
-    fun initializePayPalClient(context: Context) {
-        payPalClient = null
-        payPalViewModel = null
-
-        val coreConfig = CoreConfig(CLIENT_ID)
-       PayPalWebCheckoutClient(context, coreConfig, "com.firstapp.paypaldemo").let { client ->
-           payPalClient = client
-           payPalViewModel = PayPalViewModel(client)
-       }
-    }
 
     /**
      * Start PayPal Checkout flow.
      * This is called from CartView’s “Pay with PayPal” button, for example.
      */
     fun startPayPalCheckout(activity: ComponentActivity,  amount: Double) {
-        val vm = payPalViewModel ?: return
-        viewModelScope.launch {
-            _checkoutState.value = CheckoutState.Loading("Starting PayPal Checkout")
-            vm.startPayPalCheckout(
-                amount = amount,
-                activity = activity,
-                onSuccess = {
-                    // We successfully launched the web flow, now just wait for onNewIntent to “finish”.
-                },
-                onFailure = { error ->
-                    _checkoutState.value = CheckoutState.Error(error)
-                }
-            )
-        }
+//        val vm = payPalViewModel ?: return
+//        viewModelScope.launch {
+//            _checkoutState.value = CheckoutState.Loading("Starting PayPal Checkout")
+//            vm.startPayPalCheckout(
+//                amount = amount,
+//                activity = activity,
+//                onSuccess = {
+//                    // We successfully launched the web flow, now just wait for onNewIntent to “finish”.
+//                },
+//                onFailure = { error ->
+//                    _checkoutState.value = CheckoutState.Error(error)
+//                }
+//            )
+//        }
     }
 
     fun openPaymentLink(activity: ComponentActivity, uri: Uri) {
@@ -146,13 +124,5 @@ class CheckoutCoordinatorViewModel : ViewModel() {
      */
     fun resetState() {
         _checkoutState.value = CheckoutState.Idle
-        payPalClient = null
-        payPalViewModel = null
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        payPalClient = null
-        payPalViewModel = null
     }
 }

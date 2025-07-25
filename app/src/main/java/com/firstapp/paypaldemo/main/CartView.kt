@@ -1,5 +1,7 @@
 package com.firstapp.paypaldemo.main
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
@@ -36,11 +37,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.firstapp.paypaldemo.R
+import com.firstapp.paypaldemo.paypalcheckout.PayPalViewModel
 import com.paypal.android.paymentbuttons.PayPalButton
 import com.paypal.android.paymentbuttons.PayPalButtonColor
 import com.paypal.android.paymentbuttons.PayPalButtonLabel
@@ -55,8 +57,8 @@ data class Item(
 @ExperimentalMaterial3Api
 @Composable
 fun CartView(
-    onPayWithPayPal: (Double) -> Unit,
     onPayWithCard: (Double) -> Unit,
+    payPalViewModel: PayPalViewModel = hiltViewModel(),
     onPayWithLink: (Double) -> Unit
 ) {
     val payPalButtonCornerRadius = with(LocalDensity.current) { 10.dp.toPx() }
@@ -65,6 +67,9 @@ fun CartView(
     val totalAmount = items.sumOf { it.amount }
 
     var isPaymentLinkEnabled by rememberSaveable { mutableStateOf(true) }
+
+    // We also need the current Activity to pass to checkoutWithCard:
+    val activity = LocalActivityResultRegistryOwner.current as ComponentActivity
 
     Column(
         modifier = Modifier
@@ -141,17 +146,12 @@ fun CartView(
             )
 
         } else {
-            AndroidView(
-                factory = { context ->
-                    PayPalButton(context).apply { setOnClickListener { onPayWithPayPal(totalAmount) } }
-                },
-                update = { button ->
-                    button.color = PayPalButtonColor.BLUE
-                    button.label = PayPalButtonLabel.PAY
-                    button.size = PaymentButtonSize.LARGE
-                    button.customCornerRadius = payPalButtonCornerRadius
-                },
-                modifier = Modifier.fillMaxWidth()
+            PayPalButton(
+                cornerRadius = payPalButtonCornerRadius,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    payPalViewModel.startPayPalCheckout(amount = totalAmount, activity = activity)
+                }
             )
             Spacer(modifier = Modifier.height(10.dp))
             PaymentButton(
@@ -208,6 +208,26 @@ fun CartItemView(item: Item) {
 }
 
 @Composable
+fun PayPalButton(
+    modifier: Modifier = Modifier,
+    cornerRadius: Float? = null,
+    onClick: () -> Unit
+) {
+    AndroidView(
+        factory = { context ->
+            PayPalButton(context).apply { setOnClickListener { onClick() } }
+        },
+        update = { button ->
+            button.color = PayPalButtonColor.BLUE
+            button.label = PayPalButtonLabel.PAY
+            button.size = PaymentButtonSize.LARGE
+            button.customCornerRadius = cornerRadius
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
 fun PaymentButton(
     text: String,
     backgroundColor: Color,
@@ -235,17 +255,16 @@ fun PaymentButton(
     }
 }
 
-@ExperimentalMaterial3Api
-@Preview
-@Composable
-fun CartViewPreview() {
-    MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            CartView(
-                onPayWithCard = {},
-                onPayWithPayPal = {},
-                onPayWithLink = {}
-            )
-        }
-    }
-}
+//@ExperimentalMaterial3Api
+//@Preview
+//@Composable
+//fun CartViewPreview() {
+//    MaterialTheme {
+//        Surface(modifier = Modifier.fillMaxSize()) {
+//            CartView(
+//                onPayWithCard = {},
+//                onPayWithPayPal = {}
+//            )
+//        }
+//    }
+//}

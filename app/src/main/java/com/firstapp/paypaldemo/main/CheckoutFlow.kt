@@ -41,7 +41,6 @@ fun CheckoutFlow(
     NavHost(navController = navController, startDestination = "cart", modifier = modifier) {
         composable("cart") {
             CartView(
-                onPayWithPayPal = onPayWithPayPal,
                 onPayWithLink = onPayWithLink,
                 onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") }
             )
