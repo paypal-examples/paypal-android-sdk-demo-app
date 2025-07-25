@@ -82,40 +82,48 @@ class PayPalViewModel @Inject constructor(
     /**
      * Called after the user returns from the Chrome Custom Tab to finish the checkout.
      */
-    suspend fun finishPayPalCheckout(
-        intent: android.content.Intent,
-        onSuccess: (String) -> Unit,
-        onCanceled: () -> Unit,
-        onFailure: (String) -> Unit
+    fun finishPayPalCheckout(
+        intent: android.content.Intent
+//        onSuccess: (String) -> Unit,
+//        onCanceled: () -> Unit,
+//        onFailure: (String) -> Unit
     ) {
+        viewModelScope.launch {
+            val result = authState?.let { existingAuthState ->
+                payPalClient.finishStart(intent, existingAuthState)
+            }
 
-        val result = authState?.let { existingAuthState ->
-            payPalClient.finishStart(intent, existingAuthState)
-        }
+            when (result) {
+                is PayPalWebCheckoutFinishStartResult.Success -> {
+                    val orderId = result.orderId
+                    if (orderId == null) {
+                        // TODO: update UI
+//                    onFailure("received success but PayPal returned a null orderId")
+                    } else {
+                        val finalOrder = DemoMerchantAPI.completeOrder(orderId, "CAPTURE")
+                        println("✅ captured order: ${finalOrder.id}")
 
-        when (result) {
-            is PayPalWebCheckoutFinishStartResult.Success -> {
-                val orderId = result.orderId
-                if (orderId == null) {
-                    onFailure("received success but PayPal returned a null orderId")
-                } else {
-                    val finalOrder = DemoMerchantAPI.completeOrder(orderId, "CAPTURE")
-                    println("✅ captured order: ${finalOrder.id}")
-                    onSuccess(finalOrder.id)
+                        // TODO: update UI
+//                    onSuccess(finalOrder.id)
+                    }
+                }
+
+                is PayPalWebCheckoutFinishStartResult.Failure -> {
+                    // TODO: update UI
+//                onFailure(result.error.toString())
+                }
+
+                is PayPalWebCheckoutFinishStartResult.Canceled -> {
+                    // TODO: update UI
+//                onCanceled()
+                }
+
+                else -> {
+                    // TODO: update UI
+//                onFailure("Unexpected error occurred while completing the checkout.")
                 }
             }
 
-            is PayPalWebCheckoutFinishStartResult.Failure -> {
-                onFailure(result.error.toString())
-            }
-
-            is PayPalWebCheckoutFinishStartResult.Canceled -> {
-                onCanceled()
-            }
-
-            else -> {
-                onFailure("Unexpected error occurred while completing the checkout.")
-            }
         }
     }
 }

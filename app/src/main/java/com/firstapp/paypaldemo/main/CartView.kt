@@ -34,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +48,8 @@ import com.paypal.android.paymentbuttons.PayPalButton
 import com.paypal.android.paymentbuttons.PayPalButtonColor
 import com.paypal.android.paymentbuttons.PayPalButtonLabel
 import com.paypal.android.paymentbuttons.PaymentButtonSize
+import com.paypal.android.utils.OnNewIntentEffect
+import com.paypal.android.utils.getActivityOrNull
 
 data class Item(
     val name: String,
@@ -70,6 +73,13 @@ fun CartView(
 
     // We also need the current Activity to pass to checkoutWithCard:
     val activity = LocalActivityResultRegistryOwner.current as ComponentActivity
+
+    // Capture LocalContext reference to obtain a ComponentActivity reference
+    // when PayPal launch is requested
+    val context = LocalContext.current
+    OnNewIntentEffect { newIntent ->
+        payPalViewModel.finishPayPalCheckout(newIntent)
+    }
 
     Column(
         modifier = Modifier
@@ -150,7 +160,9 @@ fun CartView(
                 cornerRadius = payPalButtonCornerRadius,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    payPalViewModel.startPayPalCheckout(amount = totalAmount, activity = activity)
+                    context.getActivityOrNull()?.let { activity ->
+                        payPalViewModel.startPayPalCheckout(amount = totalAmount, activity = activity)
+                    }
                 }
             )
             Spacer(modifier = Modifier.height(10.dp))
