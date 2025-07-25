@@ -1,7 +1,5 @@
 package com.firstapp.paypaldemo.main
 
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,26 +21,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.firstapp.paypaldemo.R
-import com.firstapp.paypaldemo.paypalcheckout.PayPalViewModel
 import com.paypal.android.paymentbuttons.PayPalButton
 import com.paypal.android.paymentbuttons.PayPalButtonColor
 import com.paypal.android.paymentbuttons.PayPalButtonLabel
 import com.paypal.android.paymentbuttons.PaymentButtonSize
-import com.paypal.android.utils.OnNewIntentEffect
-import com.paypal.android.utils.getActivityOrNull
 
 data class Item(
     val name: String,
@@ -52,27 +47,18 @@ data class Item(
 
 @Composable
 fun CartView(
+    shoppingCartItems: List<Item>,
     onPayWithCard: (Double) -> Unit,
-    payPalViewModel: PayPalViewModel = hiltViewModel()
+    onPayWithPayPal: () -> Unit,
 ) {
+    val totalAmount by remember { derivedStateOf { shoppingCartItems.sumOf { it.amount } } }
     val payPalButtonCornerRadius = with(LocalDensity.current) { 10.dp.toPx() }
-
-    val items = listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt))
-    val totalAmount = items.sumOf { it.amount }
-
-    // Capture LocalContext reference to obtain a ComponentActivity reference
-    // when PayPal launch is requested
-    val context = LocalContext.current
-    OnNewIntentEffect { newIntent ->
-        payPalViewModel.finishPayPalCheckout(newIntent)
-    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .padding(20.dp),
-
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
@@ -83,7 +69,7 @@ fun CartView(
             modifier = Modifier.padding(top = 16.dp, bottom = 25.dp)
         )
 
-        items.forEach { item ->
+        shoppingCartItems.forEach { item ->
             CartItemView(item)
         }
 
@@ -95,8 +81,7 @@ fun CartView(
         )
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -115,11 +100,7 @@ fun CartView(
         PayPalButton(
             cornerRadius = payPalButtonCornerRadius,
             modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                context.getActivityOrNull()?.let { activity ->
-                    payPalViewModel.startPayPalCheckout(amount = totalAmount, activity = activity)
-                }
-            }
+            onClick = { onPayWithPayPal() }
         )
         Spacer(modifier = Modifier.height(10.dp))
         PaymentButton(

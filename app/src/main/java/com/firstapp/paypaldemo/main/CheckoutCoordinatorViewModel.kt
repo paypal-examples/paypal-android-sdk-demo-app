@@ -1,18 +1,11 @@
 package com.firstapp.paypaldemo.main
 
-import android.content.Context
-import android.content.Intent
-import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.firstapp.paypaldemo.paypalcheckout.PayPalViewModel
-import com.paypal.android.corepayments.CoreConfig
-import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
-const val CLIENT_ID = "AQTfw2irFfemo-eWG4H5UY-b9auKihUpXQ2Engl4G1EsHJe2mkpfUv_SN3Mba0v3CfrL6Fk_ecwv9EOo"
+const val CLIENT_ID =
+    "AQTfw2irFfemo-eWG4H5UY-b9auKihUpXQ2Engl4G1EsHJe2mkpfUv_SN3Mba0v3CfrL6Fk_ecwv9EOo"
 
 /**
  * Simple sealed class representing states we might show:
@@ -39,50 +32,6 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     private val _checkoutState = MutableStateFlow<CheckoutState>(CheckoutState.Idle)
     val checkoutState: StateFlow<CheckoutState> = _checkoutState
 
-    /**
-     * Start PayPal Checkout flow.
-     * This is called from CartView’s “Pay with PayPal” button, for example.
-     */
-    fun startPayPalCheckout(activity: ComponentActivity,  amount: Double) {
-//        val vm = payPalViewModel ?: return
-//        viewModelScope.launch {
-//            _checkoutState.value = CheckoutState.Loading("Starting PayPal Checkout")
-//            vm.startPayPalCheckout(
-//                amount = amount,
-//                activity = activity,
-//                onSuccess = {
-//                    // We successfully launched the web flow, now just wait for onNewIntent to “finish”.
-//                },
-//                onFailure = { error ->
-//                    _checkoutState.value = CheckoutState.Error(error)
-//                }
-//            )
-//        }
-    }
-
-    /**
-     * Called from MainActivity.onNewIntent
-     * to finish the PayPal flow after the Chrome Custom Tab returns.
-     */
-    fun handleOnNewIntent(intent: Intent) {
-//        val vm = payPalViewModel ?: return
-//        viewModelScope.launch {
-//            _checkoutState.value = CheckoutState.Loading("Finishing PayPal Checkout")
-//            vm.finishPayPalCheckout(
-//                intent = intent,
-//                onSuccess = { completedOrderId ->
-//                    _checkoutState.value = CheckoutState.OrderComplete(completedOrderId)
-//                },
-//                onCanceled = {
-//                    _checkoutState.value = CheckoutState.Error("Checkout canceled by user.")
-//                },
-//                onFailure = { error ->
-//                    _checkoutState.value = CheckoutState.Error(error)
-//                }
-//            )
-//        }
-    }
-
     // For final success
     fun onCardCheckoutComplete(orderId: String) {
         _checkoutState.value = CheckoutState.OrderComplete(orderId)
@@ -92,7 +41,6 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     fun showError(message: String) {
         _checkoutState.value = CheckoutState.Error(message)
     }
-
 
     /**
      * Reset or clear any error/completion state if user navigates away.

@@ -21,7 +21,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.firstapp.paypaldemo.R
 import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
+import com.firstapp.paypaldemo.paypalcheckout.PayWithPayPal
+
+// NOTE: The shopping cart in this example is static. This code snippet should draw a parallel
+// to the data layer in your own application
+private val shoppingCartItems =
+    listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt))
 
 @Composable
 fun CheckoutFlow(
@@ -30,13 +37,18 @@ fun CheckoutFlow(
     onDismissComplete: () -> Unit
 ) {
     val navController = rememberNavController()
-
     val coordinator: CheckoutCoordinatorViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 
     NavHost(navController = navController, startDestination = "cart") {
         composable("cart") {
             CartView(
-                onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") }
+                shoppingCartItems = shoppingCartItems,
+                onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") },
+                onPayWithPayPal = {
+                    navController.navigate("payPalCheckout") {
+                        popUpTo("cart")
+                    }
+                },
             )
         }
 
@@ -56,6 +68,16 @@ fun CheckoutFlow(
                 amount = amountDouble,
                 onOrderCompleted = { orderId ->
                     navController.navigate("orderComplete/$orderId")
+                }
+            )
+        }
+
+        composable("payPalCheckout") {
+            PayWithPayPal(
+                onOrderComplete = { orderId ->
+                    navController.navigate("orderComplete/$orderId") {
+                        popUpTo("cart")
+                    }
                 }
             )
         }
