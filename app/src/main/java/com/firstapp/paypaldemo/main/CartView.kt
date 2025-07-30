@@ -56,6 +56,7 @@ fun CartView(
     onPayWithLink: (Double) -> Unit,
     onPayWithPayPal: () -> Unit,
 ) {
+    // TODO: make ShoppingCart data type with .items and .totalAmount property
     val totalAmount by remember { derivedStateOf { shoppingCartItems.sumOf { it.amount } } }
     val payPalButtonCornerRadius = with(LocalDensity.current) { 10.dp.toPx() }
 

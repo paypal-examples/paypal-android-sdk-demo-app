@@ -73,6 +73,9 @@ class PayPalViewModel @Inject constructor(
                         // user has authorized their payment method and we are deep linked back into
                         // the application via onNewIntent
                         authState = result.authState
+
+                        // update UI to show Retry button
+                        _uiState.update { currentState -> currentState.copy(didInitiateCheckout = true) }
                     }
 
                     is PayPalPresentAuthChallengeResult.Failure ->
@@ -112,10 +115,10 @@ class PayPalViewModel @Inject constructor(
             }
 
             is PayPalWebCheckoutFinishStartResult.NoResult -> {
-                // Control has been passed to Chrome Custom Tab. By making the UI idle,
-                // The user's intent cannot be determined by the SDK. By returning the UI
-                // to an idle state, we can give users the opportunity to relaunch the flow
-                // e.g. if they accidentally closed the Chrome Custom Tab and need to re-launch it
+                // Control has been passed to Chrome Custom Tab. The user's intent cannot be
+                // determined by the SDK. By returning the UI to an idle state, we can give users
+                // the opportunity to relaunch the flow e.g. if they accidentally closed
+                // the Chrome Custom Tab and need to re-launch it
                 checkoutState = CheckoutState.Idle
             }
         }
@@ -149,7 +152,8 @@ class PayPalViewModel @Inject constructor(
             CartUiState(
                 items = items,
                 totalAmount = totalAmount,
-                checkoutState = CheckoutState.Idle
+                checkoutState = CheckoutState.Idle,
+                didInitiateCheckout = false
             )
         }
     }
