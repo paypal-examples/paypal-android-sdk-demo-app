@@ -53,7 +53,7 @@ class PayPalViewModel @Inject constructor(
      * The final 'finish' must still happen in handleOnNewIntent => finishPayPalCheckout.
      */
     fun startPayPalCheckout(activity: ComponentActivity) {
-        checkoutState = CheckoutState.Loading("Starting PayPal Checkout")
+        checkoutState = CheckoutState.OrderCreateInProgress("Starting PayPal Checkout")
         viewModelScope.launch {
             try {
                 val items = _uiState.value.items
@@ -73,9 +73,7 @@ class PayPalViewModel @Inject constructor(
                         // user has authorized their payment method and we are deep linked back into
                         // the application via onNewIntent
                         authState = result.authState
-
-                        // update UI to show Retry button
-                        _uiState.update { currentState -> currentState.copy(didInitiateCheckout = true) }
+                        checkoutState = CheckoutState.StartPayPalInProgress("Starting PayPal Checkout")
                     }
 
                     is PayPalPresentAuthChallengeResult.Failure ->
@@ -120,6 +118,9 @@ class PayPalViewModel @Inject constructor(
                 // the opportunity to relaunch the flow e.g. if they accidentally closed
                 // the Chrome Custom Tab and need to re-launch it
                 checkoutState = CheckoutState.Idle
+
+                // update UI to show Retry button
+                _uiState.update { currentState -> currentState.copy(didInitiateCheckout = true) }
             }
         }
     }
