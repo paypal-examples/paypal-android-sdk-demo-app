@@ -106,7 +106,7 @@ fun CheckoutFlow(
 
     // React to coordinator's state changes:
     when (checkoutState) {
-        is CheckoutState.Loading -> {
+        is CheckoutState.OrderCreateInProgress -> {
             LoadingOverlay(checkoutState.message)
         }
 

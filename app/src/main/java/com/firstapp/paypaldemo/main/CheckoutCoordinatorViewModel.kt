@@ -18,7 +18,8 @@ const val CLIENT_ID =
  */
 sealed class CheckoutState {
     object Idle : CheckoutState()
-    data class Loading(val message: String = "Loading...") : CheckoutState()
+    data class OrderCreateInProgress(val message: String = "Loading...") : CheckoutState()
+    data class StartPayPalInProgress(val message: String) : CheckoutState()
     data class OrderComplete(val orderId: String) : CheckoutState()
     data class Error(val message: String) : CheckoutState()
     data class PaymentLinkComplete(val uri: Uri): CheckoutState()

@@ -3,7 +3,9 @@ package com.firstapp.paypaldemo.paypalcheckout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -16,11 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.firstapp.paypaldemo.main.CheckoutState
+import com.paypal.android.utils.OnLifecycleOwnerResumeEffect
 import com.paypal.android.utils.OnNewIntentEffect
 import com.paypal.android.utils.getActivityOrNull
 
@@ -47,14 +51,26 @@ fun PayWithPayPal(
         viewModel.finishPayPalCheckout(newIntent)
     }
 
+    // Also attempt to finish PayPal from cold start after a process kill
+    OnLifecycleOwnerResumeEffect {
+        val intent = context.getActivityOrNull()?.intent
+        intent?.let { viewModel.finishPayPalCheckout(it) }
+    }
+
     // Notify Order Complete
     LaunchedEffect(uiState.checkoutState) {
         (uiState.checkoutState as? CheckoutState.OrderComplete)?.let { result ->
             onOrderComplete(result.orderId)
         }
     }
+
+    val isLoading = when (uiState.checkoutState) {
+        is CheckoutState.OrderCreateInProgress, is CheckoutState.StartPayPalInProgress -> true
+        else -> false
+    }
     PayWithPayPal(
-        didInitiateCheckout = uiState.didInitiateCheckout,
+        isLoading = isLoading,
+        showRetryButton = uiState.didInitiateCheckout,
         onRetryStartPayPal = {
             context.getActivityOrNull()?.let { activity ->
                 viewModel.startPayPalCheckout(activity = activity)
@@ -64,7 +80,11 @@ fun PayWithPayPal(
 }
 
 @Composable
-fun PayWithPayPal(didInitiateCheckout: Boolean, onRetryStartPayPal: () -> Unit) {
+fun PayWithPayPal(
+    isLoading: Boolean,
+    showRetryButton: Boolean,
+    onRetryStartPayPal: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,16 +94,29 @@ fun PayWithPayPal(didInitiateCheckout: Boolean, onRetryStartPayPal: () -> Unit) 
             Arrangement.spacedBy(10.dp, alignment = Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        CircularProgressIndicator()
-        Text("Redirecting to PayPal...")
+        val progressAlpha = if (isLoading) 1.0f else 0.0f
+        val retryButtonAlpha = if (showRetryButton && !isLoading) 1.0f else 0.0f
+        val message = if (isLoading) {
+            "Redirecting to PayPal"
+        } else {
+            "Confirm your PayPal Account"
+        }
 
-        val buttonAlpha = if (didInitiateCheckout) 1.0f else 0.0f
+        CircularProgressIndicator(modifier = Modifier.alpha(progressAlpha))
+        Text(
+            text = message,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
         Button(
             onClick = onRetryStartPayPal,
             modifier = Modifier
-                .alpha(buttonAlpha)
+                .alpha(retryButtonAlpha)
+                .defaultMinSize(minHeight = 48.dp)
         ) {
-            Text("Retry")
+            Text(text = "Confirm", modifier = Modifier
+                .padding(horizontal = 32.dp)
+            )
         }
     }
 }
@@ -91,11 +124,11 @@ fun PayWithPayPal(didInitiateCheckout: Boolean, onRetryStartPayPal: () -> Unit) 
 @Preview
 @Composable
 fun PayWithPayPalPreviewInitial() {
-    PayWithPayPal(didInitiateCheckout = false, onRetryStartPayPal = {})
+    PayWithPayPal(isLoading = true, showRetryButton = false, onRetryStartPayPal = {})
 }
 
 @Preview
 @Composable
 fun PayWithPayPalPreviewAllowRetry() {
-    PayWithPayPal(didInitiateCheckout = true, onRetryStartPayPal = {})
+    PayWithPayPal(isLoading = false, showRetryButton = true, onRetryStartPayPal = {})
 }
