@@ -6,8 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
-import com.firstapp.paypaldemo.main.CheckoutCoordinatorViewModel
-import com.firstapp.paypaldemo.main.CheckoutFlow
+import com.firstapp.paypaldemo.cart.CheckoutCoordinatorViewModel
+import com.firstapp.paypaldemo.cart.CheckoutFlow
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
 

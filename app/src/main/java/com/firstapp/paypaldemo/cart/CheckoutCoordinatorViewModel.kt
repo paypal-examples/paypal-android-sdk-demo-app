@@ -1,4 +1,4 @@
-package com.firstapp.paypaldemo.main
+package com.firstapp.paypaldemo.cart
 
 import android.content.Context
 import android.content.Intent

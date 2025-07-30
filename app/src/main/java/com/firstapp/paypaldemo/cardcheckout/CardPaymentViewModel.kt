@@ -3,7 +3,7 @@ package com.firstapp.paypaldemo.cardcheckout
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firstapp.paypaldemo.main.CLIENT_ID
+import com.firstapp.paypaldemo.cart.CLIENT_ID
 import com.firstapp.paypaldemo.service.Amount
 import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import com.firstapp.paypaldemo.service.PurchaseUnit
