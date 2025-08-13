@@ -19,8 +19,10 @@ import java.net.URL
  */
 object DemoMerchantAPI {
 
+    const val APP_SWITCH_HOST = "paypal-mobile-sdk-demo-server-8dacbcd617ba.herokuapp.com"
+
     // Example base URL to your Heroku or any server that can create orders
-    private const val BASE_URL = "https://paypal-mobile-sdk-demo-server-8dacbcd617ba.herokuapp.com"
+    private const val BASE_URL = "https://$APP_SWITCH_HOST"
 
     /**
      * Example function to create an order on the merchant server.

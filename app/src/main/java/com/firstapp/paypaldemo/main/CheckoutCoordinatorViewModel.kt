@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firstapp.paypaldemo.cardcheckout.CardPaymentViewModel
 import com.firstapp.paypaldemo.paypalcheckout.PayPalViewModel
+import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import com.paypal.android.cardpayments.CardClient
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
@@ -34,6 +35,7 @@ sealed class CheckoutState {
     data class CardCheckout(val amount: Double) : CheckoutState()
     data class OrderComplete(val orderId: String) : CheckoutState()
     data class Error(val message: String) : CheckoutState()
+    data class PaymentLinkComplete(val uri: Uri): CheckoutState()
 }
 
 /**
@@ -114,26 +116,33 @@ class CheckoutCoordinatorViewModel : ViewModel() {
         intent.launchUrl(activity, uri)
     }
 
+    private fun isAppSwitchUri(uri: Uri) = uri.host == DemoMerchantAPI.APP_SWITCH_HOST
+
     /**
      * Called from MainActivity.onNewIntent
      * to finish the PayPal flow after the Chrome Custom Tab returns.
      */
     fun handleOnNewIntent(intent: Intent) {
-        val vm = payPalViewModel ?: return
-        viewModelScope.launch {
-            _checkoutState.value = CheckoutState.Loading("Finishing PayPal Checkout")
-            vm.finishPayPalCheckout(
-                intent = intent,
-                onSuccess = { completedOrderId ->
-                    _checkoutState.value = CheckoutState.OrderComplete(completedOrderId)
-                },
-                onCanceled = {
-                    _checkoutState.value = CheckoutState.Error("Checkout canceled by user.")
-                },
-                onFailure = { error ->
-                    _checkoutState.value = CheckoutState.Error(error)
-                }
-            )
+        val deepLinkUri = intent.data
+        if (deepLinkUri != null && isAppSwitchUri(deepLinkUri)) {
+            _checkoutState.value = CheckoutState.PaymentLinkComplete(deepLinkUri)
+        } else {
+            val vm = payPalViewModel ?: return
+            viewModelScope.launch {
+                _checkoutState.value = CheckoutState.Loading("Finishing PayPal Checkout")
+                vm.finishPayPalCheckout(
+                    intent = intent,
+                    onSuccess = { completedOrderId ->
+                        _checkoutState.value = CheckoutState.OrderComplete(completedOrderId)
+                    },
+                    onCanceled = {
+                        _checkoutState.value = CheckoutState.Error("Checkout canceled by user.")
+                    },
+                    onFailure = { error ->
+                        _checkoutState.value = CheckoutState.Error(error)
+                    }
+                )
+            }
         }
     }
 
