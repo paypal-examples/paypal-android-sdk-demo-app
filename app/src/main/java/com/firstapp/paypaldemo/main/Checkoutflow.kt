@@ -27,13 +27,14 @@ fun CheckoutFlow(
     onPayWithCard: (Double) -> Unit,
     checkoutState: CheckoutState,
     onDismissError: () -> Unit,
-    onDismissComplete: () -> Unit
+    onDismissComplete: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
 
     val coordinator: CheckoutCoordinatorViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 
-    NavHost(navController = navController, startDestination = "cart") {
+    NavHost(navController = navController, startDestination = "cart", modifier = modifier) {
         composable("cart") {
             CartView(
                 onPayWithPayPal = onPayWithPayPal,

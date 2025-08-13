@@ -16,16 +16,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun OrderCompleteView (
+fun OrderCompleteView(
     orderID: String,
     onDone: () -> Unit
 ) {
 
     Column(
         modifier = Modifier
-            .padding(20.dp)
-        .padding(top = 8.dp),
-
+            .padding(horizontal = 20.dp),
         verticalArrangement = Arrangement.Bottom,
     ) {
         Text("Order Complete", fontWeight = FontWeight.Bold, fontSize = 25.sp)

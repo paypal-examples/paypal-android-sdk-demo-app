@@ -59,7 +59,7 @@ fun CartView(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(20.dp),
+            .padding(horizontal = 20.dp),
 
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
