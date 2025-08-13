@@ -2,19 +2,22 @@ package com.firstapp.paypaldemo.main
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.ComponentActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firstapp.paypaldemo.cardcheckout.CardPaymentViewModel
 import com.firstapp.paypaldemo.paypalcheckout.PayPalViewModel
+import com.paypal.android.cardpayments.CardClient
 import com.paypal.android.corepayments.CoreConfig
 import com.paypal.android.paypalwebpayments.PayPalWebCheckoutClient
-import com.paypal.android.cardpayments.CardClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-const val CLIENT_ID = "AQTfw2irFfemo-eWG4H5UY-b9auKihUpXQ2Engl4G1EsHJe2mkpfUv_SN3Mba0v3CfrL6Fk_ecwv9EOo"
+const val CLIENT_ID =
+    "AQTfw2irFfemo-eWG4H5UY-b9auKihUpXQ2Engl4G1EsHJe2mkpfUv_SN3Mba0v3CfrL6Fk_ecwv9EOo"
 
 /**
  * Simple sealed class representing states we might show:
@@ -64,17 +67,17 @@ class CheckoutCoordinatorViewModel : ViewModel() {
         payPalViewModel = null
 
         val coreConfig = CoreConfig(CLIENT_ID)
-       PayPalWebCheckoutClient(context, coreConfig, "com.firstapp.paypaldemo").let { client ->
-           payPalClient = client
-           payPalViewModel = PayPalViewModel(client)
-       }
+        PayPalWebCheckoutClient(context, coreConfig, "com.firstapp.paypaldemo").let { client ->
+            payPalClient = client
+            payPalViewModel = PayPalViewModel(client)
+        }
     }
 
     /**
      * Start PayPal Checkout flow.
      * This is called from CartView’s “Pay with PayPal” button, for example.
      */
-    fun startPayPalCheckout(activity: ComponentActivity,  amount: Double) {
+    fun startPayPalCheckout(activity: ComponentActivity, amount: Double) {
         val vm = payPalViewModel ?: return
         viewModelScope.launch {
             _checkoutState.value = CheckoutState.Loading("Starting PayPal Checkout")
@@ -106,6 +109,10 @@ class CheckoutCoordinatorViewModel : ViewModel() {
         _checkoutState.value = CheckoutState.CardCheckout(amount)
     }
 
+    fun openPaymentLink(activity: ComponentActivity, uri: Uri) {
+        val intent = CustomTabsIntent.Builder().build()
+        intent.launchUrl(activity, uri)
+    }
 
     /**
      * Called from MainActivity.onNewIntent

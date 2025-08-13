@@ -50,6 +50,7 @@ dependencies {
     implementation libs.paypal.webpayments
     implementation libs.paypal.cardpayments
     implementation libs.paypal.paymentbuttons
+    implementation libs.androidx.browser
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit

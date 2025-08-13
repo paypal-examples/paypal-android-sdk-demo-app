@@ -57,7 +57,7 @@ data class Item(
 fun CartView(
     onPayWithPayPal: (Double) -> Unit,
     onPayWithCard: (Double) -> Unit,
-    onPayWithLink: () -> Unit
+    onPayWithLink: (Double) -> Unit
 ) {
     val payPalButtonCornerRadius = with(LocalDensity.current) { 10.dp.toPx() }
 
@@ -136,7 +136,7 @@ fun CartView(
                 text = "Pay Now",
                 backgroundColor = Color.Black,
                 onClick = {
-                    onPayWithLink()
+                    onPayWithLink(totalAmount)
                 }
             )
 

@@ -10,6 +10,7 @@ activityCompose = "1.8.0"
 composeBom = "2024.04.01"
 navigationCompose = "2.7.5"
 payPalSdk = "2.0.0"
+androidxBrowser = "1.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,6 +31,7 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 paypal-webpayments = { group = "com.paypal.android", name = "paypal-web-payments", version.ref = "payPalSdk"}
 paypal-cardpayments = { group = "com.paypal.android", name = "card-payments", version.ref = "payPalSdk"}
 paypal-paymentbuttons = { group = "com.paypal.android", name = "payment-buttons", version.ref = "payPalSdk"}
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "androidxBrowser"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

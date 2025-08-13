@@ -27,6 +27,7 @@ import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
 fun CheckoutFlow(
     onPayWithPayPal: (Double) -> Unit,
     onPayWithCard: (Double) -> Unit,
+    onPayWithLink: (Double) -> Unit,
     checkoutState: CheckoutState,
     onDismissError: () -> Unit,
     onDismissComplete: () -> Unit,
@@ -41,9 +42,7 @@ fun CheckoutFlow(
             CartView(
                 onPayWithPayPal = onPayWithPayPal,
                 onPayWithCard = onPayWithCard,
-                onPayWithLink = {
-                    TODO("implement pay with link")
-                }
+                onPayWithLink = onPayWithLink
             )
         }
 
