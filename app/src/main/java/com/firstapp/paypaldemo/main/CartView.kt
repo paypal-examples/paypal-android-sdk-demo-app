@@ -61,7 +61,7 @@ fun CartView(
 ) {
     val payPalButtonCornerRadius = with(LocalDensity.current) { 10.dp.toPx() }
 
-    val items = listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt))
+    val items = listOf(Item(name = "10 Credit Points", amount = 19.99, imageResId = R.drawable.gold))
     val totalAmount = items.sumOf { it.amount }
 
     var isPaymentLinkEnabled by rememberSaveable { mutableStateOf(true) }
