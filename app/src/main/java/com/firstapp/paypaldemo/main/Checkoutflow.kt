@@ -16,11 +16,13 @@ import androidx.navigation.compose.rememberNavController
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
 
+@ExperimentalMaterial3Api
 @Composable
 fun CheckoutFlow(
     onPayWithPayPal: (Double) -> Unit,
@@ -38,7 +40,10 @@ fun CheckoutFlow(
         composable("cart") {
             CartView(
                 onPayWithPayPal = onPayWithPayPal,
-                onPayWithCard = onPayWithCard
+                onPayWithCard = onPayWithCard,
+                onPayWithLink = {
+                    TODO("implement pay with link")
+                }
             )
         }
 

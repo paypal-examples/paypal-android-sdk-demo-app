@@ -25,6 +25,10 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,12 +56,15 @@ data class Item(
 @Composable
 fun CartView(
     onPayWithPayPal: (Double) -> Unit,
-    onPayWithCard: (Double) -> Unit
+    onPayWithCard: (Double) -> Unit,
+    onPayWithLink: () -> Unit
 ) {
     val payPalButtonCornerRadius = with(LocalDensity.current) { 10.dp.toPx() }
 
     val items = listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt))
     val totalAmount = items.sumOf { it.amount }
+
+    var isPaymentLinkEnabled by rememberSaveable { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -70,15 +77,19 @@ fun CartView(
     ) {
         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
             SegmentedButton(
-                selected = false,
-                onClick = {},
+                selected = isPaymentLinkEnabled,
+                onClick = {
+                    isPaymentLinkEnabled = true
+                },
                 shape = SegmentedButtonDefaults.itemShape(index = 0, 2)
             ) {
                 Text("Use Payment Link")
             }
             SegmentedButton(
-                selected = false,
-                onClick = {},
+                selected = !isPaymentLinkEnabled,
+                onClick = {
+                    isPaymentLinkEnabled = false
+                },
                 shape = SegmentedButtonDefaults.itemShape(index = 1, 2)
             ) {
                 Text("Use Native Checkout")
@@ -120,24 +131,36 @@ fun CartView(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        AndroidView(
-            factory = { context ->
-                PayPalButton(context).apply { setOnClickListener { onPayWithPayPal(totalAmount) } }
-            },
-            update = { button ->
-                button.color = PayPalButtonColor.BLUE
-                button.label = PayPalButtonLabel.PAY
-                button.size = PaymentButtonSize.LARGE
-                button.customCornerRadius = payPalButtonCornerRadius
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        PaymentButton(
-            text = "Pay with Card",
-            backgroundColor = Color.Black,
-            onClick = { onPayWithCard(totalAmount) }
-        )
+        if (isPaymentLinkEnabled) {
+            PaymentButton(
+                text = "Pay Now",
+                backgroundColor = Color.Black,
+                onClick = {
+                    onPayWithLink()
+                }
+            )
+
+        } else {
+            AndroidView(
+                factory = { context ->
+                    PayPalButton(context).apply { setOnClickListener { onPayWithPayPal(totalAmount) } }
+                },
+                update = { button ->
+                    button.color = PayPalButtonColor.BLUE
+                    button.label = PayPalButtonLabel.PAY
+                    button.size = PaymentButtonSize.LARGE
+                    button.customCornerRadius = payPalButtonCornerRadius
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            PaymentButton(
+                text = "Pay with Card",
+                backgroundColor = Color.Black,
+                onClick = { onPayWithCard(totalAmount) }
+            )
+
+        }
     }
 }
 
@@ -220,7 +243,8 @@ fun CartViewPreview() {
         Surface(modifier = Modifier.fillMaxSize()) {
             CartView(
                 onPayWithCard = {},
-                onPayWithPayPal = {}
+                onPayWithPayPal = {},
+                onPayWithLink = {}
             )
         }
     }
