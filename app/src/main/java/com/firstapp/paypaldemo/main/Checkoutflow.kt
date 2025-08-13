@@ -1,6 +1,5 @@
 package com.firstapp.paypaldemo.main
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -113,8 +112,9 @@ fun CheckoutFlow(
         is CheckoutState.PaymentLinkComplete -> {
             // navigate to orderComplete for payment link
             LaunchedEffect(checkoutState) {
-                val amount = checkoutState.uri.getQueryParameter("amt")
-                navController.navigate("paymentLinkComplete/${amount}")
+                checkoutState.uri.getQueryParameter("amt")?.let { amount ->
+                    navController.navigate("paymentLinkComplete/${amount}")
+                }
             }
         }
 

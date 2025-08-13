@@ -3,6 +3,7 @@ package com.firstapp.paypaldemo.main
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,8 @@ sealed class CheckoutState {
     data class Error(val message: String) : CheckoutState()
     data class PaymentLinkComplete(val uri: Uri): CheckoutState()
 }
+
+private const val TAG = "CheckoutCoordinatorViewModel"
 
 /**
  * The coordinator ViewModel that orchestrates PayPal and Card payments.
@@ -125,7 +128,12 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     fun handleOnNewIntent(intent: Intent) {
         val deepLinkUri = intent.data
         if (deepLinkUri != null && isAppSwitchUri(deepLinkUri)) {
-            _checkoutState.value = CheckoutState.PaymentLinkComplete(deepLinkUri)
+            val isSuccessfulDeepLink = deepLinkUri.path?.contains("success") ?: false
+            if (isSuccessfulDeepLink) {
+                _checkoutState.value = CheckoutState.PaymentLinkComplete(deepLinkUri)
+            } else {
+                Log.d(TAG, "❌ Not a success URL")
+            }
         } else {
             val vm = payPalViewModel ?: return
             viewModelScope.launch {
