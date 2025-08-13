@@ -34,6 +34,15 @@ android {
     buildFeatures {
         compose true
     }
+
+    signingConfigs {
+        debug {
+            storeFile file('keystores/debug.keystore')
+            storePassword 'debugkeystore'
+            keyAlias 'debug_key'
+            keyPassword 'debugonly'
+        }
+    }
 }
 
 dependencies {
