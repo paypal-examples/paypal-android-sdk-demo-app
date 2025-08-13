@@ -19,6 +19,9 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,6 +48,7 @@ data class Item(
     val imageResId: Int
 )
 
+@ExperimentalMaterial3Api
 @Composable
 fun CartView(
     onPayWithPayPal: (Double) -> Unit,
@@ -59,16 +63,32 @@ fun CartView(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 20.dp),
+            .padding(top = 16.dp, start = 20.dp, end = 20.dp),
 
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            SegmentedButton(
+                selected = false,
+                onClick = {},
+                shape = SegmentedButtonDefaults.itemShape(index = 0, 2)
+            ) {
+                Text("Use Payment Link")
+            }
+            SegmentedButton(
+                selected = false,
+                onClick = {},
+                shape = SegmentedButtonDefaults.itemShape(index = 1, 2)
+            ) {
+                Text("Use Native Checkout")
+            }
+        }
         Text(
             text = "Cart",
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 16.dp, bottom = 25.dp)
+            modifier = Modifier.padding(top = 8.dp, bottom = 25.dp)
         )
 
         items.forEach { item ->
