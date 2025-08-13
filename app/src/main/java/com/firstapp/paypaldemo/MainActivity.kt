@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.firstapp.paypaldemo.cart.CheckoutCoordinatorViewModel
 import com.firstapp.paypaldemo.cart.CheckoutFlow
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PayPalDemoTheme {
                 // Observe the coordinator's state to see if there's an error or order complete
-                val checkoutState = coordinatorViewModel.checkoutState.collectAsState()
+                val checkoutState = coordinatorViewModel.checkoutState.collectAsStateWithLifecycle()
 
                 // Basic “router” approach or wrap in your NavHost:
                 CheckoutFlow(
