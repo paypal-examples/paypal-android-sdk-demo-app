@@ -27,34 +27,35 @@ This demo app serves as a reference for merchants, as an example integration app
    git clone https://github.com/paypal-examples/paypal-android-sdk-demo-app.git
    cd paypal-android-sdk-demo-app
    ```
-
 2. **Open Project in Android Studio**
    * Open Android Studio
    * Select `File > Open` and choose this folder as the project root
    * Perform a Gradle sync
-
 3. **Run the App**
    * Launch the app on an emulator or physical device
    * You should see a basic cart view with options for PayPal or Card checkout
 
 ## PayPal Web Checkout Flow
 
-1. Tapping Pay with PayPal calls DemoMerchantAPI.createOrder
-2. Opens Chrome Custom Tab to let the user complete the PayPal flow
-3. On return, onNewIntent triggers finishPayPalCheckout in PayPalViewModel, which captures the order, then navigates to OrderCompleteView
+1. Enable the "Use PayPal SDK" segmented button option at the top of the screen
+1. Press the "Pay with PayPal" button at the bottom of the screen
+1. Wait for the Chrome Custom Tab to load
+1. Authorize a payment method using an existing PayPal Sandbox account
+
+When complete, the Chrome Custom Tab will redirect back into the demo app with a confirmation screen.
 
 ## Card Payment Flow
 
-1. Tapping Pay with Card navigates to CardCheckoutView
-2. User enters card info; CardPaymentViewModel handles:
-   * createOrder on server
-   * approveOrder with the PayPal Card SDK
-   * completeOrder on server
-3. If successful, navigates to OrderCompleteView
+1. Enable the "Use PayPal SDK" segmented button option at the top of the screen
+1. Press the "Pay with Card" button at the bottom of the screen
+1. When prompted, enter credit card details
+1. Press "Submit" to complete the order
 
-## 📍 Where to Find Key Logic
+When complete, the demo app will redirect to a confirmation screen.
 
-If you want to skip UI details and jump straight to **business logic** (server calls and SDK integrations), here are the main files:
+## 📍 Where to Find Key Business Logic
+
+If you want to skip UI details and jump straight into the **business logic** (server calls and SDK integrations) of the demo app, here are the main files:
 
 ### PayPalViewModel.kt
 * Wraps all **PayPal Web Checkout** logic:
