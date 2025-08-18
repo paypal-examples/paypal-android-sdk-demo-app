@@ -59,6 +59,10 @@ This repo inlcudes a [debug.keystore](app/keystores/debug.keystore) for signing 
 
 In a production setting, your keystore should not be public. We are only including it in this project to allow you to sign a local build of the demo app with a sha256 fingerprint that is valid for Android app links destined for the demo server.
 
+## 🌐 Android App Links Setup
+
+To set up app links in your own Android app, follow the steps provided by the Android team on [developer.android.com](https://developer.android.com/training/app-links).
+
 ## 📍 Where to Find Key Business Logic
 
 If you want to skip UI details and jump straight into the **business logic** (server calls and SDK integrations) of the demo app, here are the main files:
