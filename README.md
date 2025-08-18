@@ -63,6 +63,14 @@ In a production setting, your keystore should not be public. We are only includi
 
 To set up app links in your own Android app, follow the steps provided by the Android team on [developer.android.com](https://developer.android.com/training/app-links).
 
+## 🏦 Payment Links
+
+To set up PayPal Payment Links, see our official Payment Link docs: https://www.paypal.com/us/business/accept-payments/payment-links.
+
+Also, consider the following tutorial resources on YouTube for a visual guide to setting up Payment Links:
+- [How to Create Payment Links and Buy Buttons](https://www.youtube.com/watch?v=2LsuYc-9iU8)
+- [Configuring the Payment Links and Buttons Settings](https://www.youtube.com/watch?v=Nx5JznuBr9I)
+
 ## 📍 Where to Find Key Business Logic
 
 If you want to skip UI details and jump straight into the **business logic** (server calls and SDK integrations) of the demo app, here are the main files:
