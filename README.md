@@ -53,6 +53,12 @@ When complete, the Chrome Custom Tab will redirect back into the demo app with a
 
 When complete, the demo app will redirect to a confirmation screen.
 
+## ⚠️ Demo Keystore
+
+This repo inlcudes a [debug.keystore](app/keystores/debug.keystore) for signing debug versions of the demo app. This is necessary for deep linking since the `assetlinks.json` includes a `sha256` fingerprint derived from the debug signing key embedded in this repository.
+
+In a production setting, your keystore should not be public. We are only including it in this project to allow you to sign a local build of the demo app with a sha256 fingerprint that is valid for Android app links destined for the demo server.
+
 ## 📍 Where to Find Key Business Logic
 
 If you want to skip UI details and jump straight into the **business logic** (server calls and SDK integrations) of the demo app, here are the main files:
