@@ -1,21 +1,41 @@
-# paypal-android-sdk-demo-app
-This repository contains a **demo app** that simulates a real-world merchant application, featuring a store, cart, and checkout process.
-The goal is to showcase core features of the **PayPal Android SDK** (Web Checkout and Card Payments), providing merchants with sample code and integration patterns to simplify development.
-This app makes merchant server side PayPal API calls via [PayPal Typescript Server SDK version 0.5.1](https://github.com/paypal/PayPal-TypeScript-Server-SDK) which is in beta.
-Our developer docs show an example integration with direct PayPal server-side calls.
+# PayPal Android Demo App – SDK & Payment Link Integration
 
-## 🚀 Version 1.0 Features
+This repository contains an **Jetpack Compose demo application** that simulates a real-world merchant app, featuring a shopping cart checkout process. The goal is to showcase core features of the **PayPal Android SDK** (Web Checkout and Card Payments), providing merchants with sample code and integration patterns to simplify development.
 
-1. **Checkout with PayPal**
-   * Seamless PayPal web checkout experience via Chrome Custom Tabs
-
-2. **Checkout with Card**
-   * Collect card details in-app, then approve & capture the order via PayPal's Card Payments APIs
+This app makes server-side PayPal API calls via a merchant server that uses the [PayPal Typescript Server SDK](https://github.com/paypal/PayPal-TypeScript-Server-SDK), which is in beta. Our developer docs show an example integration with direct PayPal server-side calls.
 
 ## 🎯 Purpose
 
-This demo app serves as a reference for merchants, as an example integration application.
-By providing a practical and easy-to-follow example, we aim to make PayPal SDK integration smoother and faster for developers.
+This demo app serves as a reference for merchants, as an example integration application. By providing a practical and easy-to-follow example, we aim to make PayPal SDK integration smoother and faster for developers.
+
+## 🚀 Demo App Features
+
+- Checkout with PayPal
+- Checkout with Cards
+- Checkout with Payment Links `New`
+
+## 🔧 Requirements
+
+* **Android Studio** Ladybug (or newer)
+* **Min SDK** 35+ (example)
+* **PayPal Android SDK** (Web Payments + Card Payments)
+
+## 🛠 Setup
+
+1. **Clone this repository**:
+   ```bash
+   git clone https://github.com/paypal-examples/paypal-android-sdk-demo-app.git
+   cd paypal-android-sdk-demo-app
+   ```
+
+2. **Open Project in Android Studio**
+   * Open Android Studio
+   * Select `File > Open` and choose this folder as the project root
+   * Perform a Gradle sync
+
+3. **Run the App**
+   * Launch the app on an emulator or physical device
+   * You should see a basic cart view with options for PayPal or Card checkout
 
 ## PayPal Web Checkout Flow
 
@@ -80,26 +100,3 @@ If you want to skip UI details and jump straight to **business logic** (server c
 
 ### 5. OrderCompleteView
 * Displays a final "Thank you" message and the captured order ID once checkout is successful
-
-## 🔧 Requirements
-
-* **Android Studio** Ladybug (or newer)
-* **Min SDK** 35+ (example)
-* **PayPal Android SDK** (Web Payments + Card Payments)
-
-## 🛠 Setup
-
-1. **Clone this repository**:
-  
-   * git clone https://github.com/paypal-examples/paypal-android-sdk-demo-app.git
-   * cd paypal-android-sdk-demo-app
- 
-
-2. **Open in Android Studio**
-   * Select File > Open, choose this folder
-   * Let Gradle sync everything
-
-
-3. **Run the App**
-   * Use an emulator or physical device
-   * You should see a basic cart view with options for PayPal or Card checkout
