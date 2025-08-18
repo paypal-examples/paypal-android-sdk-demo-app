@@ -44,7 +44,7 @@ fun CardCheckoutView(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 20.dp)) {
 
             Text(
                 text = "Card Checkout",

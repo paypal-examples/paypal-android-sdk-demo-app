@@ -16,11 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun OrderCompleteView(
-    orderID: String,
-    onDone: () -> Unit
-) {
-
+fun PaymentLinkCompleteView(amount: String, onDone: () -> Unit) {
     Column(
         modifier = Modifier
             .padding(horizontal = 20.dp),
@@ -29,7 +25,7 @@ fun OrderCompleteView(
         Text("Order Complete", fontWeight = FontWeight.Bold, fontSize = 25.sp)
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Thank you for your order! Your order number is $orderID.")
+        Text("Thank you for your order! Your amount is $amount")
         Spacer(modifier = Modifier.weight(1.0f))
         Button(
             onClick = onDone,
@@ -40,6 +36,5 @@ fun OrderCompleteView(
         ) {
             Text("Done")
         }
-
     }
 }

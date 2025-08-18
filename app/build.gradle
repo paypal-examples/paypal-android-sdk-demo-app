@@ -34,6 +34,15 @@ android {
     buildFeatures {
         compose true
     }
+
+    signingConfigs {
+        debug {
+            storeFile file('keystores/debug.keystore')
+            storePassword 'debugkeystore'
+            keyAlias 'debug_key'
+            keyPassword 'debugonly'
+        }
+    }
 }
 
 dependencies {
@@ -50,6 +59,7 @@ dependencies {
     implementation libs.paypal.webpayments
     implementation libs.paypal.cardpayments
     implementation libs.paypal.paymentbuttons
+    implementation libs.androidx.browser
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
