@@ -92,7 +92,7 @@ fun CartView(
                 },
                 shape = SegmentedButtonDefaults.itemShape(index = 1, 2)
             ) {
-                Text("Use Native Checkout")
+                Text("Use PayPal SDK")
             }
         }
         Text(
