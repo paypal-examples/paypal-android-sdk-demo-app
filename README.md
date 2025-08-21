@@ -1,12 +1,23 @@
 # PayPal Android Demo App – SDK & Payment Link Integration
 
-This repository contains an **Jetpack Compose demo application** that simulates a real-world merchant app, featuring a shopping cart checkout process. The goal is to showcase core features of the **PayPal Android SDK** (Web Checkout and Card Payments), providing merchants with sample code and integration patterns to simplify development.
+This repository provides a **Jetpack Compose** reference implementation of shopping cart checkout with the **PayPal Android SDK**. Our demo app showcases two core features of the PayPal SDK: Web Checkout and Card Payments. We are providing this reference implementation along with Jetpack Compose-friendly SDK integration patterns to help simplify onboarding and development for our merchants.
 
-This app makes server-side PayPal API calls via a merchant server that uses the [PayPal Typescript Server SDK](https://github.com/paypal/PayPal-TypeScript-Server-SDK), which is in beta. Our developer docs show an example integration with direct PayPal server-side calls.
+The primary purpose of this demo app is to **demonstrate two integration options** to accept payments in Android Apps through PayPal:
+
+1. **Direct SDK integration** offers a seamless in-app checkout using native components.
+1. **Payment Links integration** redirects users to a PayPal hosted checkout experience via universal links.  
+
+App developers can choose the method that best fits their needs.
+
+|  Direct SDK Integration | Payment Link Integration |
+| -------- | ------- |
+| <video src="https://github.com/user-attachments/assets/42050ed7-ada4-4186-860e-eb05c3fd0681"> | <video src="https://github.com/user-attachments/assets/21c6c876-8112-4aa0-b890-d7aaa2620562"> |
 
 ## 🎯 Purpose
 
 This demo app serves as a reference for merchants, as an example integration application. By providing a practical and easy-to-follow example, we aim to make PayPal SDK integration smoother and faster for developers.
+
+This app makes server-side PayPal API calls via a merchant server that uses the [PayPal Typescript Server SDK](https://github.com/paypal/PayPal-TypeScript-Server-SDK), which is in beta. Our developer docs show an example integration with direct PayPal server-side calls.
 
 ## 🚀 Demo App Features
 
