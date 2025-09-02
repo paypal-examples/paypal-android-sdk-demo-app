@@ -42,7 +42,8 @@ fun CheckoutFlow(
         composable("cart") {
             CartView(
                 onPayWithPayPal = onPayWithPayPal,
-                onPayWithLink = onPayWithLink
+                onPayWithLink = onPayWithLink,
+                onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") }
             )
         }
 
