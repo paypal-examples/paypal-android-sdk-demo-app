@@ -1,5 +1,6 @@
 package com.firstapp.paypaldemo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -53,5 +54,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        // Let the coordinator handle finishing PayPal after browser return
+        coordinatorViewModel.handleOnNewIntent(intent)
     }
 }

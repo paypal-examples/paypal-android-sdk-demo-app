@@ -28,8 +28,9 @@ import com.firstapp.paypaldemo.paypalcheckout.PayWithPayPal
 
 // NOTE: The shopping cart in this example is static. This code snippet should draw a parallel
 // to the data layer in your own application
-private val shoppingCartItems =
-    listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt))
+// TODO: determine a better location for this variable that can be shared across different features
+val shoppingCartItems =
+    listOf(Item(name = "10 Credit Points", amount = 19.99, imageResId = R.drawable.gold))
 
 @ExperimentalMaterial3Api
 @Composable

@@ -10,6 +10,7 @@ import com.firstapp.paypaldemo.main.CLIENT_ID
 import com.firstapp.paypaldemo.main.CartUiState
 import com.firstapp.paypaldemo.main.CheckoutState
 import com.firstapp.paypaldemo.main.Item
+import com.firstapp.paypaldemo.main.shoppingCartItems
 import com.firstapp.paypaldemo.service.Amount
 import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import com.firstapp.paypaldemo.service.PurchaseUnit
@@ -73,7 +74,8 @@ class PayPalViewModel @Inject constructor(
                         // user has authorized their payment method and we are deep linked back into
                         // the application via onNewIntent
                         authState = result.authState
-                        checkoutState = CheckoutState.StartPayPalInProgress("Starting PayPal Checkout")
+                        checkoutState =
+                            CheckoutState.StartPayPalInProgress("Starting PayPal Checkout")
                     }
 
                     is PayPalPresentAuthChallengeResult.Failure ->
@@ -147,8 +149,7 @@ class PayPalViewModel @Inject constructor(
 
     companion object {
         private val defaultCartUiState by lazy {
-            val items =
-                listOf(Item(name = "White T-shirt", amount = 29.99, imageResId = R.drawable.tshirt))
+            val items = shoppingCartItems
             val totalAmount = items.sumOf { it.amount }
             CartUiState(
                 items = items,
