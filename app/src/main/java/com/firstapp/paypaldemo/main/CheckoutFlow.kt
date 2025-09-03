@@ -51,9 +51,7 @@ fun CheckoutFlow(
                 shoppingCartItems = shoppingCartItems,
                 onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") },
                 onPayWithPayPal = {
-                    navController.navigate("payPalCheckout") {
-                        popUpTo("cart")
-                    }
+                    navController.navigate("payPalCheckout") { popUpTo("cart") }
                 },
             )
         }

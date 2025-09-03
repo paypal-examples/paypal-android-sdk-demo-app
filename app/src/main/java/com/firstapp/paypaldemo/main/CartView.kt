@@ -130,17 +130,27 @@ fun CartView(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        PayPalButton(
-            cornerRadius = payPalButtonCornerRadius,
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { onPayWithPayPal() }
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        PaymentButton(
-            text = "Pay with Card",
-            backgroundColor = Color.Black,
-            onClick = { onPayWithCard(totalAmount) }
-        )
+        if (isPaymentLinkEnabled) {
+            PaymentButton(
+                text = "Pay Now",
+                backgroundColor = Color.Black,
+                onClick = {
+                    onPayWithLink(totalAmount)
+                }
+            )
+        } else {
+            PayPalButton(
+                cornerRadius = payPalButtonCornerRadius,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onPayWithPayPal() }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            PaymentButton(
+                text = "Pay with Card",
+                backgroundColor = Color.Black,
+                onClick = { onPayWithCard(totalAmount) }
+            )
+        }
     }
 }
 
