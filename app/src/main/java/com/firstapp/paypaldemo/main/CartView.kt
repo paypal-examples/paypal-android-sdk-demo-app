@@ -1,5 +1,6 @@
 package com.firstapp.paypaldemo.main
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -164,7 +166,7 @@ fun CartItemView(item: Item) {
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color.Black),
+            border = BorderStroke(1.dp, Color.Black),
         ) {
             Row(
                 modifier = Modifier
@@ -245,16 +247,18 @@ fun PaymentButton(
     }
 }
 
-//@ExperimentalMaterial3Api
-//@Preview
-//@Composable
-//fun CartViewPreview() {
-//    MaterialTheme {
-//        Surface(modifier = Modifier.fillMaxSize()) {
-//            CartView(
-//                onPayWithCard = {},
-//                onPayWithPayPal = {}
-//            )
-//        }
-//    }
-//}
+@ExperimentalMaterial3Api
+@Preview
+@Composable
+fun CartViewPreview() {
+    MaterialTheme {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            CartView(
+                onPayWithCard = {},
+                onPayWithPayPal = {},
+                shoppingCartItems = shoppingCartItems,
+                onPayWithLink = {}
+            )
+        }
+    }
+}
