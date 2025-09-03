@@ -33,10 +33,6 @@ class MainActivity : ComponentActivity() {
 
                     // Basic “router” approach or wrap in your NavHost:
                     CheckoutFlow(
-                        onPayWithPayPal = { amount ->
-                            coordinatorViewModel.initializePayPalClient(this.applicationContext)
-                            coordinatorViewModel.startPayPalCheckout(this, amount)
-                        },
                         onPayWithLink = { amount ->
                             val uri =
                                 "https://www.sandbox.paypal.com/ncp/payment/BFXRZ54VKCAQ6".toUri()
@@ -58,6 +54,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 
     override fun onNewIntent(intent: Intent) {

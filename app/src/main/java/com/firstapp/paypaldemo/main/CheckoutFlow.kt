@@ -22,12 +22,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.firstapp.paypaldemo.R
 import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
+import com.firstapp.paypaldemo.paypalcheckout.PayWithPayPal
+
+// NOTE: The shopping cart in this example is static. This code snippet should draw a parallel
+// to the data layer in your own application
+val shoppingCartItems =
+    listOf(Item(name = "10 Credit Points", amount = 19.99, imageResId = R.drawable.gold))
 
 @ExperimentalMaterial3Api
 @Composable
 fun CheckoutFlow(
-    onPayWithPayPal: (Double) -> Unit,
     onPayWithLink: (Double) -> Unit,
     checkoutState: CheckoutState,
     onDismissError: () -> Unit,
@@ -35,15 +41,17 @@ fun CheckoutFlow(
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
-
     val coordinator: CheckoutCoordinatorViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 
     NavHost(navController = navController, startDestination = "cart", modifier = modifier) {
         composable("cart") {
             CartView(
-                onPayWithPayPal = onPayWithPayPal,
                 onPayWithLink = onPayWithLink,
-                onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") }
+                shoppingCartItems = shoppingCartItems,
+                onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") },
+                onPayWithPayPal = {
+                    navController.navigate("payPalCheckout") { popUpTo("cart") }
+                },
             )
         }
 
@@ -67,6 +75,16 @@ fun CheckoutFlow(
             )
         }
 
+        composable("payPalCheckout") {
+            PayWithPayPal(
+                onOrderComplete = { orderId ->
+                    navController.navigate("orderComplete/$orderId") {
+                        popUpTo("cart")
+                    }
+                }
+            )
+        }
+
         composable("orderComplete/{orderId}") { backStackEntry ->
             val orderId = backStackEntry.arguments?.getString("orderId") ?: "Unknown"
             OrderCompleteView(orderID = orderId) {
@@ -86,7 +104,7 @@ fun CheckoutFlow(
 
     // React to coordinator's state changes:
     when (checkoutState) {
-        is CheckoutState.Loading -> {
+        is CheckoutState.OrderCreateInProgress -> {
             LoadingOverlay(checkoutState.message)
         }
 
