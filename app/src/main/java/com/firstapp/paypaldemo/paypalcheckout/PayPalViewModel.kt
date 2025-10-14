@@ -5,11 +5,9 @@ import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firstapp.paypaldemo.R
-import com.firstapp.paypaldemo.main.CLIENT_ID
+import com.firstapp.paypaldemo.CLIENT_ID
 import com.firstapp.paypaldemo.main.CartUiState
 import com.firstapp.paypaldemo.main.CheckoutState
-import com.firstapp.paypaldemo.main.Item
 import com.firstapp.paypaldemo.main.shoppingCartItems
 import com.firstapp.paypaldemo.service.Amount
 import com.firstapp.paypaldemo.service.DemoMerchantAPI

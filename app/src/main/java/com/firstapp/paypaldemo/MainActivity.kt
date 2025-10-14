@@ -3,46 +3,29 @@ package com.firstapp.paypaldemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import com.firstapp.paypaldemo.main.CheckoutCoordinatorViewModel
 import com.firstapp.paypaldemo.main.CheckoutFlow
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+const val CLIENT_ID =
+    "AQTfw2irFfemo-eWG4H5UY-b9auKihUpXQ2Engl4G1EsHJe2mkpfUv_SN3Mba0v3CfrL6Fk_ecwv9EOo"
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val coordinatorViewModel: CheckoutCoordinatorViewModel by viewModels()
 
     @ExperimentalMaterial3Api
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             PayPalDemoTheme {
                 Scaffold { innerPadding ->
-                    // Observe the coordinator's state to see if there's an error or order complete
-                    val checkoutState = coordinatorViewModel.checkoutState.collectAsState()
-
-                    // Basic “router” approach or wrap in your NavHost:
-                    CheckoutFlow(
-                        checkoutState = checkoutState.value,
-                        onDismissError = {
-                            coordinatorViewModel.resetState()
-                        },
-                        onDismissComplete = {
-                            coordinatorViewModel.resetState()
-                        },
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    CheckoutFlow(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
-
     }
 }
