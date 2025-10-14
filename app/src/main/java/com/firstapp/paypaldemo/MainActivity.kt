@@ -1,6 +1,5 @@
 package com.firstapp.paypaldemo
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,7 +9,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.core.net.toUri
 import com.firstapp.paypaldemo.main.CheckoutCoordinatorViewModel
 import com.firstapp.paypaldemo.main.CheckoutFlow
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
@@ -42,16 +40,9 @@ class MainActivity : ComponentActivity() {
                         },
                         modifier = Modifier.padding(innerPadding)
                     )
-
                 }
             }
         }
 
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        // Let the coordinator handle finishing PayPal after browser return
-        coordinatorViewModel.handleOnNewIntent(intent)
     }
 }

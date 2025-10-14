@@ -1,8 +1,6 @@
 package com.firstapp.paypaldemo.main
 
-import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModel
@@ -41,25 +39,6 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     // Live state (or “flow state”) to help the UI know what to display.
     private val _checkoutState = MutableStateFlow<CheckoutState>(CheckoutState.Idle)
     val checkoutState: StateFlow<CheckoutState> = _checkoutState
-
-    fun openPaymentLink(activity: ComponentActivity, uri: Uri) {
-        val intent = CustomTabsIntent.Builder().build()
-        intent.launchUrl(activity, uri)
-    }
-
-    private fun isAppSwitchUri(uri: Uri) = uri.host == DemoMerchantAPI.APP_SWITCH_HOST
-
-    fun handleOnNewIntent(intent: Intent) {
-        val deepLinkUri = intent.data
-        if (deepLinkUri != null && isAppSwitchUri(deepLinkUri)) {
-            val isSuccessfulDeepLink = deepLinkUri.path?.contains("success") ?: false
-            if (isSuccessfulDeepLink) {
-                _checkoutState.value = CheckoutState.PaymentLinkComplete(deepLinkUri)
-            } else {
-                Log.d(TAG, "❌ Not a success URL")
-            }
-        }
-    }
 
     /**
      * Reset or clear any error/completion state if user navigates away.
