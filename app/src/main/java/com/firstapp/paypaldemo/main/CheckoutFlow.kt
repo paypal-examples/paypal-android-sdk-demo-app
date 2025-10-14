@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.firstapp.paypaldemo.R
 import com.firstapp.paypaldemo.cardcheckout.CardCheckoutView
+import com.firstapp.paypaldemo.paymentlink.PayWithPaymentLink
 import com.firstapp.paypaldemo.paypalcheckout.PayWithPayPal
 
 // NOTE: The shopping cart in this example is static. This code snippet should draw a parallel
@@ -34,7 +35,6 @@ val shoppingCartItems =
 @ExperimentalMaterial3Api
 @Composable
 fun CheckoutFlow(
-    onPayWithLink: (Double) -> Unit,
     checkoutState: CheckoutState,
     onDismissError: () -> Unit,
     onDismissComplete: () -> Unit,
@@ -46,7 +46,9 @@ fun CheckoutFlow(
     NavHost(navController = navController, startDestination = "cart", modifier = modifier) {
         composable("cart") {
             CartView(
-                onPayWithLink = onPayWithLink,
+                onPayWithLink = {
+                    navController.navigate("paymentLink") { popUpTo("cart") }
+                },
                 shoppingCartItems = shoppingCartItems,
                 onPayWithCard = { amount -> navController.navigate("cardCheckout/$amount") },
                 onPayWithPayPal = {
@@ -57,7 +59,6 @@ fun CheckoutFlow(
 
         composable("cardCheckout/{amount}") { backStackEntry ->
             val previousDestination = navController.previousBackStackEntry
-
             DisposableEffect(Unit) {
                 onDispose {
                     if (previousDestination?.destination?.route == "cart") {
@@ -77,6 +78,16 @@ fun CheckoutFlow(
 
         composable("payPalCheckout") {
             PayWithPayPal(
+                onOrderComplete = { orderId ->
+                    navController.navigate("orderComplete/$orderId") {
+                        popUpTo("cart")
+                    }
+                }
+            )
+        }
+
+        composable("paymentLink") { backStackEntry ->
+            PayWithPaymentLink(
                 onOrderComplete = { orderId ->
                     navController.navigate("orderComplete/$orderId") {
                         popUpTo("cart")

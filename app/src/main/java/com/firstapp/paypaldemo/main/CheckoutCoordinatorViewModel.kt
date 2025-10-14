@@ -42,16 +42,6 @@ class CheckoutCoordinatorViewModel : ViewModel() {
     private val _checkoutState = MutableStateFlow<CheckoutState>(CheckoutState.Idle)
     val checkoutState: StateFlow<CheckoutState> = _checkoutState
 
-    // For final success
-    fun onCardCheckoutComplete(orderId: String) {
-        _checkoutState.value = CheckoutState.OrderComplete(orderId)
-    }
-
-    // If we want to show an error from the card flow
-    fun showError(message: String) {
-        _checkoutState.value = CheckoutState.Error(message)
-    }
-
     fun openPaymentLink(activity: ComponentActivity, uri: Uri) {
         val intent = CustomTabsIntent.Builder().build()
         intent.launchUrl(activity, uri)

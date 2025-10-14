@@ -33,14 +33,6 @@ class MainActivity : ComponentActivity() {
 
                     // Basic “router” approach or wrap in your NavHost:
                     CheckoutFlow(
-                        onPayWithLink = { amount ->
-                            val uri =
-                                "https://www.sandbox.paypal.com/ncp/payment/BFXRZ54VKCAQ6".toUri()
-                            coordinatorViewModel.openPaymentLink(
-                                activity = this@MainActivity,
-                                uri = uri
-                            )
-                        },
                         checkoutState = checkoutState.value,
                         onDismissError = {
                             coordinatorViewModel.resetState()

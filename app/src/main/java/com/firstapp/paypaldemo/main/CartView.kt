@@ -80,18 +80,14 @@ fun CartView(
         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
             SegmentedButton(
                 selected = isPaymentLinkEnabled,
-                onClick = {
-                    isPaymentLinkEnabled = true
-                },
+                onClick = { isPaymentLinkEnabled = true },
                 shape = SegmentedButtonDefaults.itemShape(index = 0, 2)
             ) {
                 Text("Use Payment Link")
             }
             SegmentedButton(
                 selected = !isPaymentLinkEnabled,
-                onClick = {
-                    isPaymentLinkEnabled = false
-                },
+                onClick = { isPaymentLinkEnabled = false },
                 shape = SegmentedButtonDefaults.itemShape(index = 1, 2)
             ) {
                 Text("Use PayPal SDK")
