@@ -40,6 +40,5 @@ fun OrderCompleteView(
         ) {
             Text("Done")
         }
-
     }
 }

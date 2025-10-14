@@ -73,13 +73,5 @@ fun CheckoutFlow(modifier: Modifier = Modifier) {
                 onDone = { navController.popBackStack(route = "cart", inclusive = false) }
             )
         }
-
-        composable("paymentLinkComplete/{amount}") { backStackEntry ->
-            val amount = backStackEntry.arguments?.getString("amount") ?: "Unknown"
-            PaymentLinkCompleteView(
-                amount = amount,
-                onDone = { navController.popBackStack(route = "cart", inclusive = false) }
-            )
-        }
     }
 }
