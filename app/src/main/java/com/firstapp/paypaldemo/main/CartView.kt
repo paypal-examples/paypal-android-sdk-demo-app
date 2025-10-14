@@ -1,5 +1,6 @@
 package com.firstapp.paypaldemo.main
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +26,10 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,7 +43,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.firstapp.paypaldemo.R
 import com.paypal.android.paymentbuttons.PayPalButton
 import com.paypal.android.paymentbuttons.PayPalButtonColor
 import com.paypal.android.paymentbuttons.PayPalButtonLabel
@@ -55,14 +57,14 @@ data class Item(
 @ExperimentalMaterial3Api
 @Composable
 fun CartView(
-    onPayWithPayPal: (Double) -> Unit,
+    shoppingCartItems: List<Item>,
     onPayWithCard: (Double) -> Unit,
-    onPayWithLink: (Double) -> Unit
+    onPayWithLink: (Double) -> Unit,
+    onPayWithPayPal: () -> Unit,
 ) {
+    // TODO: make ShoppingCart data type with .items and .totalAmount property
+    val totalAmount by remember { derivedStateOf { shoppingCartItems.sumOf { it.amount } } }
     val payPalButtonCornerRadius = with(LocalDensity.current) { 10.dp.toPx() }
-
-    val items = listOf(Item(name = "10 Credit Points", amount = 19.99, imageResId = R.drawable.gold))
-    val totalAmount = items.sumOf { it.amount }
 
     var isPaymentLinkEnabled by rememberSaveable { mutableStateOf(true) }
 
@@ -102,7 +104,7 @@ fun CartView(
             modifier = Modifier.padding(top = 8.dp, bottom = 25.dp)
         )
 
-        items.forEach { item ->
+        shoppingCartItems.forEach { item ->
             CartItemView(item)
         }
 
@@ -114,8 +116,7 @@ fun CartView(
         )
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -139,19 +140,11 @@ fun CartView(
                     onPayWithLink(totalAmount)
                 }
             )
-
         } else {
-            AndroidView(
-                factory = { context ->
-                    PayPalButton(context).apply { setOnClickListener { onPayWithPayPal(totalAmount) } }
-                },
-                update = { button ->
-                    button.color = PayPalButtonColor.BLUE
-                    button.label = PayPalButtonLabel.PAY
-                    button.size = PaymentButtonSize.LARGE
-                    button.customCornerRadius = payPalButtonCornerRadius
-                },
-                modifier = Modifier.fillMaxWidth()
+            PayPalButton(
+                cornerRadius = payPalButtonCornerRadius,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onPayWithPayPal() }
             )
             Spacer(modifier = Modifier.height(10.dp))
             PaymentButton(
@@ -159,7 +152,6 @@ fun CartView(
                 backgroundColor = Color.Black,
                 onClick = { onPayWithCard(totalAmount) }
             )
-
         }
     }
 }
@@ -174,7 +166,7 @@ fun CartItemView(item: Item) {
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            border = androidx.compose.foundation.BorderStroke(1.dp, Color.Black),
+            border = BorderStroke(1.dp, Color.Black),
         ) {
             Row(
                 modifier = Modifier
@@ -205,6 +197,26 @@ fun CartItemView(item: Item) {
             }
         }
     }
+}
+
+@Composable
+fun PayPalButton(
+    modifier: Modifier = Modifier,
+    cornerRadius: Float? = null,
+    onClick: () -> Unit
+) {
+    AndroidView(
+        factory = { context ->
+            PayPalButton(context).apply { setOnClickListener { onClick() } }
+        },
+        update = { button ->
+            button.color = PayPalButtonColor.BLUE
+            button.label = PayPalButtonLabel.PAY
+            button.size = PaymentButtonSize.LARGE
+            button.customCornerRadius = cornerRadius
+        },
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -244,6 +256,7 @@ fun CartViewPreview() {
             CartView(
                 onPayWithCard = {},
                 onPayWithPayPal = {},
+                shoppingCartItems = shoppingCartItems,
                 onPayWithLink = {}
             )
         }

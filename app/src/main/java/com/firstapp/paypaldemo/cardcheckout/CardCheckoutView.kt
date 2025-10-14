@@ -40,9 +40,6 @@ fun CardCheckoutView(
     val validationVM = remember { CardCheckoutValidationViewModel() }
     // Retrieve the cardPaymentViewModel from coordinator
 
-    // We also need the current Activity to pass to checkoutWithCard:
-    val activity = LocalActivityResultRegistryOwner.current as ComponentActivity
-
     // Observe states from validationVM
     var cardNumber by rememberSaveable { mutableStateOf(validationVM.cardNumber) }
     var expirationDate by rememberSaveable { mutableStateOf(validationVM.expirationDate) }
