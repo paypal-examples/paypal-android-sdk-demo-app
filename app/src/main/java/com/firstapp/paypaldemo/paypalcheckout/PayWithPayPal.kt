@@ -8,9 +8,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.firstapp.paypaldemo.main.CheckoutState
 import com.firstapp.paypaldemo.ui.shared.BrowserSwitchLauncher
-import com.paypal.android.utils.OnLifecycleOwnerResumeEffect
-import com.paypal.android.utils.OnNewIntentEffect
-import com.paypal.android.utils.getActivityOrNull
+import com.firstapp.paypaldemo.utils.OnLifecycleOwnerResumeEffect
+import com.firstapp.paypaldemo.utils.OnNewIntentEffect
+import com.firstapp.paypaldemo.utils.getActivityOrNull
 
 @Composable
 fun PayWithPayPal(

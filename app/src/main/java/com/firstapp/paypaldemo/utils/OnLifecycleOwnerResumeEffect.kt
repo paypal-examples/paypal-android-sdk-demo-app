@@ -1,4 +1,4 @@
-package com.paypal.android.utils
+package com.firstapp.paypaldemo.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
