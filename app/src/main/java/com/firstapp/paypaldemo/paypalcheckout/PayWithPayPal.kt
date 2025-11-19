@@ -38,7 +38,7 @@ fun PayWithPayPal(
     // Also attempt to finish PayPal from cold start after a process kill
     OnLifecycleOwnerResumeEffect {
         val intent = context.getActivityOrNull()?.intent
-        intent?.let { viewModel.finishPayPalCheckout(it) }
+        viewModel.finishPayPalCheckout(intent)
     }
 
     // Notify Order Complete

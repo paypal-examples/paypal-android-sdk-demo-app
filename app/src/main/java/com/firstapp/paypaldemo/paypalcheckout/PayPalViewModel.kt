@@ -37,8 +37,6 @@ class PayPalViewModel @Inject constructor(
     private val payPalClient =
         PayPalWebCheckoutClient(context, coreConfig, DEEP_LINK_URL_SCHEME)
 
-    private var authState: String? = null
-
     private var _uiState = MutableStateFlow(defaultCartUiState)
     val uiState: StateFlow<CartUiState> = _uiState.asStateFlow()
 
@@ -67,18 +65,14 @@ class PayPalViewModel @Inject constructor(
                 val fundingSource = PayPalWebCheckoutFundingSource.PAYPAL
                 val request =
                     PayPalWebCheckoutRequest(orderId = order.id, fundingSource = fundingSource)
-                when (val result = payPalClient.start(activity, request)) {
-                    is PayPalPresentAuthChallengeResult.Success -> {
-                        // Preserve authentication state until we are able to call finish i.e. the
-                        // user has authorized their payment method and we are deep linked back into
-                        // the application via onNewIntent
-                        authState = result.authState
-                        checkoutState =
+                payPalClient.start(activity, request) { result ->
+                    checkoutState = when (result) {
+                        is PayPalPresentAuthChallengeResult.Success ->
                             CheckoutState.StartPayPalInProgress("Starting PayPal Checkout")
-                    }
 
-                    is PayPalPresentAuthChallengeResult.Failure ->
-                        checkoutState = CheckoutState.Error(result.error.toString())
+                        is PayPalPresentAuthChallengeResult.Failure ->
+                            CheckoutState.Error(result.error.toString())
+                    }
                 }
             } catch (e: Exception) {
                 val errorMessage = "❌ Failed to create order on merchant server: ${e.message}"
@@ -90,7 +84,8 @@ class PayPalViewModel @Inject constructor(
     /**
      * Called after the user returns from the Chrome Custom Tab to finish the checkout.
      */
-    fun finishPayPalCheckout(intent: Intent) = checkIfPayPalAuthFinished(intent)?.let { result ->
+    fun finishPayPalCheckout(intent: Intent?) {
+        val result = intent?.let { payPalClient.finishStart(it) }
         when (result) {
             is PayPalWebCheckoutFinishStartResult.Success -> {
                 val orderId = result.orderId
@@ -100,20 +95,15 @@ class PayPalViewModel @Inject constructor(
                 } else {
                     completeOrder(orderId)
                 }
-                discardAuthState()
             }
 
-            is PayPalWebCheckoutFinishStartResult.Failure -> {
+            is PayPalWebCheckoutFinishStartResult.Failure ->
                 checkoutState = CheckoutState.Error(result.error.toString())
-                discardAuthState()
-            }
 
-            is PayPalWebCheckoutFinishStartResult.Canceled -> {
+            is PayPalWebCheckoutFinishStartResult.Canceled ->
                 checkoutState = CheckoutState.Error("Checkout canceled by user.")
-                discardAuthState()
-            }
 
-            is PayPalWebCheckoutFinishStartResult.NoResult -> {
+            is PayPalWebCheckoutFinishStartResult.NoResult, null -> {
                 // Control has been passed to Chrome Custom Tab. The user's intent cannot be
                 // determined by the SDK. By returning the UI to an idle state, we can give users
                 // the opportunity to relaunch the flow e.g. if they accidentally closed
@@ -128,24 +118,12 @@ class PayPalViewModel @Inject constructor(
         }
     }
 
-    // Only check for PayPal Auth completion when auth state exists
-    private fun checkIfPayPalAuthFinished(intent: Intent): PayPalWebCheckoutFinishStartResult? =
-        authState?.let { payPalClient.finishStart(intent, it) }
-
     private fun completeOrder(orderId: String) {
         viewModelScope.launch {
             val finalOrder = DemoMerchantAPI.completeOrder(orderId, "CAPTURE")
             println("✅ captured order: ${finalOrder.id}")
             checkoutState = CheckoutState.OrderComplete(finalOrder.id)
         }
-    }
-
-    private fun discardAuthState() {
-        // Always discard auth state when a transaction is considered finished
-        // e.g. Success, Failure and Canceled states. You may choose to clear auth state when
-        // there is NoResult, but you will in that case need to create a new order to launch
-        // the PayPal Web flow
-        authState = null
     }
 
     companion object {
