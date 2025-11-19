@@ -11,9 +11,6 @@ import com.firstapp.paypaldemo.main.CheckoutFlow
 import com.firstapp.paypaldemo.ui.theme.PayPalDemoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
-const val CLIENT_ID =
-    "AQTfw2irFfemo-eWG4H5UY-b9auKihUpXQ2Engl4G1EsHJe2mkpfUv_SN3Mba0v3CfrL6Fk_ecwv9EOo"
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 

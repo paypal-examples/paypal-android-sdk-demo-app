@@ -6,10 +6,9 @@ import android.net.Uri
 import androidx.activity.ComponentActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.lifecycle.ViewModel
+import com.firstapp.paypaldemo.Constants.SHOPPING_CART_ITEMS
 import com.firstapp.paypaldemo.main.CartUiState
 import com.firstapp.paypaldemo.main.CheckoutState
-import com.firstapp.paypaldemo.main.shoppingCartItems
-import com.firstapp.paypaldemo.paypalcheckout.PayPalViewModel
 import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -38,14 +37,19 @@ class PayWithPaymentLinkViewModel @Inject constructor(
     /**
      * Called after the user returns from the Chrome Custom Tab to finish the checkout.
      */
-    fun finishPayWithPaymentLink(intent: Intent) {
-        val deepLinkUri = intent.data
+    fun finishPayWithPaymentLink(intent: Intent?) {
+        val deepLinkUri = intent?.data
         if (deepLinkUri != null && isAppSwitchUri(deepLinkUri)) {
             val isSuccessfulDeepLink = deepLinkUri.path?.contains("success") ?: false
             checkoutState = if (isSuccessfulDeepLink) {
                 CheckoutState.PaymentLinkComplete(deepLinkUri)
             } else {
                 CheckoutState.Error("Pay with Payment Link Unsuccessful")
+            }
+        } else {
+            // update UI to show Retry button
+            _uiState.update { currentState ->
+                currentState.copy(checkoutState = CheckoutState.Idle, didInitiateCheckout = true)
             }
         }
     }
@@ -59,7 +63,7 @@ class PayWithPaymentLinkViewModel @Inject constructor(
 
     companion object {
         private val defaultCartUiState by lazy {
-            val items = shoppingCartItems
+            val items = SHOPPING_CART_ITEMS
             val totalAmount = items.sumOf { it.amount }
             CartUiState(
                 items = items,

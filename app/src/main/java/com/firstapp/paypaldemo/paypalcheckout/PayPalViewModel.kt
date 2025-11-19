@@ -5,10 +5,11 @@ import android.content.Intent
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.firstapp.paypaldemo.CLIENT_ID
+import com.firstapp.paypaldemo.Constants.CLIENT_ID
+import com.firstapp.paypaldemo.Constants.DEEP_LINK_URL_SCHEME
+import com.firstapp.paypaldemo.Constants.SHOPPING_CART_ITEMS
 import com.firstapp.paypaldemo.main.CartUiState
 import com.firstapp.paypaldemo.main.CheckoutState
-import com.firstapp.paypaldemo.main.shoppingCartItems
 import com.firstapp.paypaldemo.service.Amount
 import com.firstapp.paypaldemo.service.DemoMerchantAPI
 import com.firstapp.paypaldemo.service.PurchaseUnit
@@ -34,7 +35,7 @@ class PayPalViewModel @Inject constructor(
 
     private val coreConfig = CoreConfig(CLIENT_ID)
     private val payPalClient =
-        PayPalWebCheckoutClient(context, coreConfig, "com.firstapp.paypaldemo")
+        PayPalWebCheckoutClient(context, coreConfig, DEEP_LINK_URL_SCHEME)
 
     private var authState: String? = null
 
@@ -117,10 +118,12 @@ class PayPalViewModel @Inject constructor(
                 // determined by the SDK. By returning the UI to an idle state, we can give users
                 // the opportunity to relaunch the flow e.g. if they accidentally closed
                 // the Chrome Custom Tab and need to re-launch it
-                checkoutState = CheckoutState.Idle
-
-                // update UI to show Retry button
-                _uiState.update { currentState -> currentState.copy(didInitiateCheckout = true) }
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        checkoutState = CheckoutState.Idle,
+                        didInitiateCheckout = true
+                    )
+                }
             }
         }
     }
@@ -147,7 +150,7 @@ class PayPalViewModel @Inject constructor(
 
     companion object {
         private val defaultCartUiState by lazy {
-            val items = shoppingCartItems
+            val items = SHOPPING_CART_ITEMS
             val totalAmount = items.sumOf { it.amount }
             CartUiState(
                 items = items,

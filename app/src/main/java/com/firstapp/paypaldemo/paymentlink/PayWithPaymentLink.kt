@@ -17,7 +17,7 @@ private val PAYMENT_LINK_URI = "https://www.sandbox.paypal.com/ncp/payment/BFXRZ
 
 @Composable
 fun PayWithPaymentLink(
-    onOrderComplete: (orderId: String) -> Unit,
+    onOrderComplete: () -> Unit,
     viewModel: PayWithPaymentLinkViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -41,13 +41,13 @@ fun PayWithPaymentLink(
     // Also attempt to finish BrowserSwitch from cold start after a process kill
     OnLifecycleOwnerResumeEffect {
         val intent = context.getActivityOrNull()?.intent
-        intent?.let { viewModel.finishPayWithPaymentLink(it) }
+        viewModel.finishPayWithPaymentLink(intent)
     }
 
     // Notify Order Complete
     LaunchedEffect(uiState.checkoutState) {
-        (uiState.checkoutState as? CheckoutState.OrderComplete)?.let { result ->
-            onOrderComplete(result.orderId)
+        (uiState.checkoutState as? CheckoutState.PaymentLinkComplete)?.let { result ->
+            onOrderComplete()
         }
     }
 
