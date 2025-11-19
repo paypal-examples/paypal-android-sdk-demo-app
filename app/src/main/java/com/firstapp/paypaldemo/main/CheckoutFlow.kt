@@ -38,7 +38,7 @@ fun CheckoutFlow(modifier: Modifier = Modifier) {
             CardCheckoutView(
                 amount = amountDouble,
                 onOrderCompleted = { orderId ->
-                    navController.navigate("orderComplete/$orderId")
+                    navController.navigate("orderComplete?orderId=$orderId")
                 }
             )
         }
@@ -46,7 +46,7 @@ fun CheckoutFlow(modifier: Modifier = Modifier) {
         composable("payPalCheckout") {
             PayWithPayPal(
                 onOrderComplete = { orderId ->
-                    navController.navigate("orderComplete/$orderId") {
+                    navController.navigate("orderComplete?orderId=$orderId") {
                         popUpTo("cart")
                     }
                 }
