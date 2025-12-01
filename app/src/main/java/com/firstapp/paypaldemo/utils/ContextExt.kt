@@ -1,4 +1,4 @@
-package com.paypal.android.utils
+package com.firstapp.paypaldemo.utils
 
 import android.content.Context
 import android.content.ContextWrapper

@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.firstapp.paypaldemo.Constants.SHOPPING_CART_ITEMS
 import com.paypal.android.paymentbuttons.PayPalButton
 import com.paypal.android.paymentbuttons.PayPalButtonColor
 import com.paypal.android.paymentbuttons.PayPalButtonLabel
@@ -80,18 +81,14 @@ fun CartView(
         SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
             SegmentedButton(
                 selected = isPaymentLinkEnabled,
-                onClick = {
-                    isPaymentLinkEnabled = true
-                },
+                onClick = { isPaymentLinkEnabled = true },
                 shape = SegmentedButtonDefaults.itemShape(index = 0, 2)
             ) {
                 Text("Use Payment Link")
             }
             SegmentedButton(
                 selected = !isPaymentLinkEnabled,
-                onClick = {
-                    isPaymentLinkEnabled = false
-                },
+                onClick = { isPaymentLinkEnabled = false },
                 shape = SegmentedButtonDefaults.itemShape(index = 1, 2)
             ) {
                 Text("Use PayPal SDK")
@@ -256,7 +253,7 @@ fun CartViewPreview() {
             CartView(
                 onPayWithCard = {},
                 onPayWithPayPal = {},
-                shoppingCartItems = shoppingCartItems,
+                shoppingCartItems = SHOPPING_CART_ITEMS,
                 onPayWithLink = {}
             )
         }

@@ -1,4 +1,4 @@
-package com.paypal.android.utils
+package com.firstapp.paypaldemo.utils
 
 import android.content.Intent
 import androidx.compose.runtime.Composable

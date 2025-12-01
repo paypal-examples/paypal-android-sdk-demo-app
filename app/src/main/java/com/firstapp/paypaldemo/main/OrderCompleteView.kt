@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun OrderCompleteView(
-    orderID: String,
+    orderId: String?,
     onDone: () -> Unit
 ) {
 
@@ -29,7 +29,11 @@ fun OrderCompleteView(
         Text("Order Complete", fontWeight = FontWeight.Bold, fontSize = 25.sp)
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Thank you for your order! Your order number is $orderID.")
+        var successMessage = "Thank you for your order!"
+        if (orderId != null) {
+            successMessage += " Your order number is $orderId."
+        }
+        Text(successMessage)
         Spacer(modifier = Modifier.weight(1.0f))
         Button(
             onClick = onDone,
@@ -40,6 +44,5 @@ fun OrderCompleteView(
         ) {
             Text("Done")
         }
-
     }
 }
