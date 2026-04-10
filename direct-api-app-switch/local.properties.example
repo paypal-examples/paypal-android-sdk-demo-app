@@ -1,0 +1,9 @@
+# PayPal Sandbox Credentials
+# Copy this file to local.properties and fill in your values.
+# Get credentials at: https://developer.paypal.com/dashboard/applications/sandbox
+#
+# IMPORTANT: local.properties is gitignored — never commit real credentials.
+
+PAYPAL_CLIENT_ID=
+PAYPAL_CLIENT_SECRET=
+RETURN_DOMAIN=https://example.com
