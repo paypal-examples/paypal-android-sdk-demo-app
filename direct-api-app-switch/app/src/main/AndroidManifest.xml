@@ -46,6 +46,7 @@
                 For sandbox testing, you can use any domain you own or test with
                 a local server + ngrok tunnel.
             -->
+            <!-- App Links for production (replace example.com with your verified domain) -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -54,6 +55,14 @@
                     android:scheme="https"
                     android:host="example.com"
                     android:pathPrefix="/app-link" />
+            </intent-filter>
+
+            <!-- Custom scheme fallback for emulator/sandbox testing (no domain verification needed) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appswitch-test" />
             </intent-filter>
 
         </activity>

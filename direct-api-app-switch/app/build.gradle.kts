@@ -1,6 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+}
+
+// Load credentials from local.properties
+val localProperties = Properties().apply {
+    val localPropsFile = rootProject.file("local.properties")
+    if (localPropsFile.exists()) {
+        localPropsFile.inputStream().use { load(it) }
+    }
 }
 
 android {
@@ -13,6 +23,15 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        // Inject PayPal credentials into BuildConfig from local.properties
+        buildConfigField("String", "PAYPAL_CLIENT_ID", "\"${localProperties.getProperty("PAYPAL_CLIENT_ID", "")}\"")
+        buildConfigField("String", "PAYPAL_CLIENT_SECRET", "\"${localProperties.getProperty("PAYPAL_CLIENT_SECRET", "")}\"")
+        buildConfigField("String", "RETURN_DOMAIN", "\"${localProperties.getProperty("RETURN_DOMAIN", "https://example.com")}\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

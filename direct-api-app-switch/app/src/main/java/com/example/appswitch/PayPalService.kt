@@ -38,7 +38,23 @@ object PayPalService {
     fun initialize(clientId: String, clientSecret: String, returnDomain: String = "https://example.com") {
         CLIENT_ID = clientId
         CLIENT_SECRET = clientSecret
-        RETURN_DOMAIN = returnDomain
+        // On emulator, use custom URL scheme so Chrome Custom Tabs can redirect
+        // back to the app without domain verification (App Links).
+        // On real devices, use the HTTPS domain from local.properties.
+        val isEmulator = android.os.Build.FINGERPRINT.contains("generic") ||
+                         android.os.Build.FINGERPRINT.contains("emulator") ||
+                         android.os.Build.MODEL.contains("Emulator") ||
+                         android.os.Build.MODEL.contains("Android SDK") ||
+                         android.os.Build.MODEL.contains("sdk_gphone") ||
+                         android.os.Build.HARDWARE == "ranchu" ||
+                         android.os.Build.HARDWARE == "goldfish" ||
+                         android.os.Build.PRODUCT.contains("sdk")
+        RETURN_DOMAIN = if (isEmulator) {
+            Log.d("PayPalService", "Emulator detected — using custom URL scheme for return URLs")
+            "appswitch-test://callback"
+        } else {
+            returnDomain
+        }
     }
 
     private var cachedAccessToken: String? = null

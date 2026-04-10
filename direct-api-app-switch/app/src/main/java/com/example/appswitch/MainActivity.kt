@@ -56,6 +56,13 @@ class MainActivity : AppCompatActivity() {
         payButton.setOnClickListener { startPaymentFlow() }
         vaultButton.setOnClickListener { startVaultFlow() }
 
+        // Initialize PayPalService with credentials from BuildConfig (injected from local.properties)
+        PayPalService.initialize(
+            clientId = BuildConfig.PAYPAL_CLIENT_ID,
+            clientSecret = BuildConfig.PAYPAL_CLIENT_SECRET,
+            returnDomain = BuildConfig.RETURN_DOMAIN
+        )
+
         // Validate credentials on startup
         validateCredentials()
 
