@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PayPal App Switch Test"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Direct API Integration (Sandbox)"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="32dp" />
+
+    <!-- Credential Status Banner -->
+    <TextView
+        android:id="@+id/credentialStatusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Checking credentials..."
+        android:textSize="14sp"
+        android:padding="12dp"
+        android:background="#FFF3E0"
+        android:textColor="#666666"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Pay Button (One-Time Payment) -->
+    <Button
+        android:id="@+id/payButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Pay $25.00"
+        android:textSize="18sp"
+        android:backgroundTint="#003087"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Vault Button (Save for Later) -->
+    <Button
+        android:id="@+id/vaultButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Save PayPal"
+        android:textSize="18sp"
+        android:backgroundTint="#009CDE"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Progress Indicator -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Status Text -->
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ready. Tap a button to start."
+        android:textSize="14sp"
+        android:textColor="#333333"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Results Display -->
+    <TextView
+        android:id="@+id/resultText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:textSize="13sp"
+        android:fontFamily="monospace"
+        android:background="#F5F5F5"
+        android:padding="16dp"
+        android:textColor="#222222" />
+
+</LinearLayout>

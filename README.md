@@ -1,132 +1,135 @@
-# PayPal Android Demo App – SDK & Payment Link Integration
+# PayPal Android SDK Demo Apps
 
-This repository provides a **Jetpack Compose** reference implementation of shopping cart checkout with the **PayPal Android SDK**. Our demo app showcases two core features of the PayPal SDK: Web Checkout and Card Payments. We are providing this reference implementation along with Jetpack Compose-friendly SDK integration patterns to help simplify onboarding and development for our merchants.
+Sample Android apps demonstrating PayPal payment integrations. Clone, configure your sandbox credentials, and see payments working in under 90 seconds.
 
-The primary purpose of this demo app is to **demonstrate two integration options** to accept payments in Android Apps through PayPal:
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/paypal-examples/paypal-android-sdk-demo-app?quickstart=1)
 
-1. **Direct SDK integration** offers a seamless in-app checkout using native components.
-1. **Payment Links integration** redirects users to a PayPal hosted checkout experience via universal links.  
+> **New to PayPal?** [Create a sandbox account](https://developer.paypal.com/dashboard/applications/sandbox) to get your Client ID and Secret.
 
-App developers can choose the method that best fits their needs.
+---
 
-|  Direct SDK Integration | Payment Link Integration |
-| -------- | ------- |
-| <video src="https://github.com/user-attachments/assets/42050ed7-ada4-4186-860e-eb05c3fd0681"> | <video src="https://github.com/user-attachments/assets/21c6c876-8112-4aa0-b890-d7aaa2620562"> |
+## Pick Your Integration
 
-## 🎯 Purpose
+| Integration | Description | Language | Server Required |
+|---|---|---|---|
+| **[Direct API — App Switch](./direct-api-app-switch/)** | Redirect to the PayPal app for payment approval using Orders v2 and Vault v3 with `app_switch_context`. No PayPal SDK dependency. | Kotlin | Yes (included) |
+| **[Native SDK](./native-sdk/)** | Use the PayPal Mobile SDK for a fully managed checkout experience with built-in UI components. | Kotlin | Yes (Heroku hosted) |
 
-This demo app serves as a reference for merchants, as an example integration application. By providing a practical and easy-to-follow example, we aim to make PayPal SDK integration smoother and faster for developers.
+### Which should I use?
 
-This app makes server-side PayPal API calls via a merchant server that uses the [PayPal Typescript Server SDK](https://github.com/paypal/PayPal-TypeScript-Server-SDK), which is in beta. Our developer docs show an example integration with direct PayPal server-side calls.
+| | Direct API (App Switch) | Native SDK |
+|---|---|---|
+| **SDK dependency** | None — raw HttpURLConnection | PayPal Android SDK |
+| **UI ownership** | You build the UI | SDK provides checkout sheet |
+| **Server calls** | Your app calls your server, server calls PayPal | SDK handles most communication |
+| **App Switch** | Full control over redirect and return handling | Managed by SDK |
+| **Best for** | Maximum control, custom UX, learning the API | Fastest integration, standard UX |
 
-## 🚀 Demo App Features
+---
 
-- Checkout with PayPal
-- Checkout with Cards
-- Checkout with Payment Links `New`
+## Quick Start (Direct API — App Switch)
 
-## 🔧 Requirements
+### 1. Get sandbox credentials
 
-* **Android Studio** Ladybug (or newer)
-* **Min SDK** 35+ (example)
-* **PayPal Android SDK** (Web Payments + Card Payments)
+Create a [sandbox REST app](https://developer.paypal.com/dashboard/applications/sandbox) and copy your **Client ID** and **Client Secret**.
 
-## 🛠 Setup
+### 2. Start the demo server
 
-1. **Clone this repository**:
-   ```bash
-   git clone https://github.com/paypal-examples/paypal-android-sdk-demo-app.git
-   cd paypal-android-sdk-demo-app
-   ```
-2. **Open Project in Android Studio**
-   * Open Android Studio
-   * Select `File > Open` and choose this folder as the project root
-   * Perform a Gradle sync
-3. **Run the App**
-   * Launch the app on an emulator or physical device
-   * You should see a basic cart view with options for PayPal or Card checkout
+```bash
+cd demo-server
+cp .env.sample .env        # paste your credentials in .env
+npm install && npm start
+```
 
-## PayPal Web Checkout Flow
+You should see: `✅ Connected to PayPal sandbox (merchant: your-email@example.com)`
 
-1. Enable the "Use PayPal SDK" segmented button option at the top of the screen
-1. Press the "Pay with PayPal" button at the bottom of the screen
-1. Wait for the Chrome Custom Tab to load
-1. Authorize a payment method using an existing PayPal Sandbox account
+Or use Docker:
+```bash
+docker-compose up
+```
 
-When complete, the Chrome Custom Tab will redirect back into the demo app with a confirmation screen.
+### 3. Run the Android app
 
-## Card Payment Flow
+```bash
+cd direct-api-app-switch
+cp local.properties.example local.properties   # paste credentials
+# Open in Android Studio, run on device
+```
 
-1. Enable the "Use PayPal SDK" segmented button option at the top of the screen
-1. Press the "Pay with Card" button at the bottom of the screen
-1. When prompted, enter credit card details
-1. Press "Submit" to complete the order
+### 4. Test a payment
 
-When complete, the demo app will redirect to a confirmation screen.
+1. Tap **Pay $25.00** — creates an order with `app_switch_context`
+2. PayPal app opens (or browser fallback)
+3. Approve the payment
+4. App captures the order and shows the Capture ID
 
-## ⚠️ Demo Keystore
+Check `http://localhost:3000/debug` to see every API request and response as copyable cURL commands.
 
-This repo inlcudes a [debug.keystore](app/keystores/debug.keystore) for signing debug versions of the demo app. This is necessary for deep linking since the `assetlinks.json` includes a `sha256` fingerprint derived from the debug signing key embedded in this repository.
+---
 
-In a production setting, your keystore should not be public. We are only including it in this project to allow you to sign a local build of the demo app with a sha256 fingerprint that is valid for Android app links destined for the demo server.
+## Running on Codespaces
 
-## 🌐 Android App Links Setup
+The demo server runs in GitHub Codespaces with zero local setup:
 
-To set up app links in your own Android app, follow the steps provided by the Android team on [developer.android.com](https://developer.android.com/training/app-links).
+1. Click the **Open in GitHub Codespaces** badge above
+2. Enter your sandbox **Client ID** and **Client Secret** when prompted
+3. The server starts automatically on port 3000
+4. Open the **Ports** tab to access the debug panel at `/debug`
 
-## 🏦 Payment Links
+> **Note:** The mobile apps (iOS/Android) require Xcode or Android Studio locally. Codespaces runs the demo server so you can test API calls and see the debug panel without installing Node.js.
 
-To set up PayPal Payment Links, see our official Payment Link docs: https://www.paypal.com/us/business/accept-payments/payment-links.
+---
 
-Also, consider the following tutorial resources on YouTube for a visual guide to setting up Payment Links:
-- [How to Create Payment Links and Buy Buttons](https://www.youtube.com/watch?v=2LsuYc-9iU8)
-- [Configuring the Payment Links and Buttons Settings](https://www.youtube.com/watch?v=Nx5JznuBr9I)
+## Project Structure
 
-## 📍 Where to Find Key Business Logic
+```
+├── README.md                    ← You are here
+├── ARCHITECTURE.md              ← Why the code is structured this way
+├── PRODUCTION-CHECKLIST.md      ← Sandbox → production migration guide
+├── LICENSE                      ← Apache 2.0
+├── docker-compose.yml           ← One-command server startup
+├── demo-server/                 ← Node.js server (OAuth, Orders, Vault)
+├── direct-api-app-switch/       ← Direct API with app_switch_context (Kotlin)
+└── native-sdk/                  ← PayPal Android SDK integration (Kotlin)
+```
 
-If you want to skip UI details and jump straight into the **business logic** (server calls and SDK integrations) of the demo app, here are the main files:
+---
 
-### PayPalViewModel.kt
-* Wraps all **PayPal Web Checkout** logic:
-  * Creating orders on the server (`DemoMerchantAPI`)
-  * Starting the browser flow via `PayPalWebCheckoutClient`
-  * Finishing checkout after the user returns from Chrome Custom Tab
+## Debug Panel
 
-### CardPaymentViewModel.kt
-* Demonstrates **Card Payments**:
-  * Creating orders on the server
-  * Approving the order with the PayPal SDK `CardPayments` module
-  * Capturing the order upon success
+The demo server includes a built-in request/response logger at `/debug`. Every API call is logged with:
 
-### CheckoutCoordinatorViewModel.kt
-* High-level **coordinator** that unifies PayPal and Card checkout flows:
-  * Maintains the `CheckoutState` (Idle, Loading, OrderComplete, Error)
-  * Sets up the PayPal client and can orchestrate card logic
+- Timestamp and HTTP method
+- Full request body (formatted JSON)
+- Full response body with status code
+- Copyable **cURL command** (credentials redacted)
 
-### DemoMerchantAPI.kt
-* Simulated server calls (`createOrder`, `completeOrder`)
-* In real apps, replace with your own backend integration
+This makes the sample app a learning tool — see exactly what PayPal API calls look like without reading docs.
 
-## 📂 Project Structure (UI + Flow)
+---
 
-### 1. MainActivity
-* Creates or retrieves `CheckoutCoordinatorViewModel`
-* Handles `onNewIntent` for PayPal browser switch return
-* Displays the main Compose UI
+## Documentation
 
-### 2. CheckoutFlow (Jetpack Compose)
-* A NavHost that moves between "Cart", "Card Checkout" (for card checkout flow), and "OrderComplete" destinations
-* Observes the coordinator's state for loading/error messages
+- [App Switch Integration Guide](https://developer.paypal.com/docs/checkout/app-switch/)
+- [Orders v2 API Reference](https://developer.paypal.com/docs/api/orders/v2/)
+- [Vault v3 API Reference](https://developer.paypal.com/docs/api/payment-tokens/v3/)
+- [Architecture Decisions](./ARCHITECTURE.md)
+- [Production Checklist](./PRODUCTION-CHECKLIST.md)
 
-### 3. CartView
-* Displays items in the cart and total amount
-* Buttons to "Pay with PayPal" or "Pay with Card"
-* Tapping either calls the coordinator to start that checkout flow
+---
 
-### 4. CardCheckoutView
-* A **Compose** screen for users to enter card details (card number, expiration, CVV)
-* References `CardPaymentViewModel` for network calls (order creation, approval, capture)
-* On success, navigates to `OrderCompleteView`
+## Contributing
 
-### 5. OrderCompleteView
-* Displays a final "Thank you" message and the captured order ID once checkout is successful
+See [CODEOWNERS](./.github/CODEOWNERS) for code ownership. To contribute:
+
+1. Fork this repository
+2. Create a feature branch
+3. Submit a pull request
+
+Please ensure your changes pass the CI build checks (Android compile).
+
+---
+
+## License
+
+[Apache 2.0](./LICENSE) — Copyright 2026 PayPal, Inc.

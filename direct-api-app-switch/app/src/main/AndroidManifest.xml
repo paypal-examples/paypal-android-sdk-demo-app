@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Internet permission for PayPal API calls -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+        Package visibility (required for Android 11+):
+        From doc: "Required before passing app_switch_context in the API request."
+        Without this, isPayPalAppInstalled() will always return false on API 30+.
+    -->
+    <queries>
+        <package android:name="com.paypal.android.p2pmobile" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:targetApi="31">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+
+            <!-- Standard launcher intent -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+                App Links intent filter for PayPal return redirect.
+                From doc: "Set android:autoVerify='true' on your checkout activity."
+
+                IMPORTANT: Replace "your-domain.com" with your actual verified domain.
+                You must host a Digital Asset Links file at:
+                https://your-domain.com/.well-known/assetlinks.json
+
+                For sandbox testing, you can use any domain you own or test with
+                a local server + ngrok tunnel.
+            -->
+            <!-- App Links for production (replace example.com with your verified domain) -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="https"
+                    android:host="example.com"
+                    android:pathPrefix="/app-link" />
+            </intent-filter>
+
+            <!-- Custom scheme fallback for emulator/sandbox testing (no domain verification needed) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="appswitch-test" />
+            </intent-filter>
+
+        </activity>
+    </application>
+
+</manifest>

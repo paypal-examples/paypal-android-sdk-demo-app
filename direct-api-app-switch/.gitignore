@@ -1,0 +1,13 @@
+# Credentials — never commit
+local.properties
+
+# Gradle build artifacts
+.gradle/
+build/
+app/build/
+*.apk
+*.aab
+
+# IDE
+.idea/
+*.iml
