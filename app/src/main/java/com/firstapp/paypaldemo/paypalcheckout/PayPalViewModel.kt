@@ -3,6 +3,7 @@ package com.firstapp.paypaldemo.paypalcheckout
 import android.content.Context
 import android.content.Intent
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firstapp.paypaldemo.Constants.CLIENT_ID
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class PayPalViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     @ApplicationContext context: Context
 ) : ViewModel() {
 
@@ -43,6 +45,12 @@ class PayPalViewModel @Inject constructor(
     private var checkoutState
         get() = _uiState.value.checkoutState
         set(value) = _uiState.update { prevState -> prevState.copy(checkoutState = value) }
+
+    init {
+        savedStateHandle.get<String>(INSTANCE_STATE_KEY)?.let {
+            payPalClient.restore(it)
+        }
+    }
 
     /**
      * Launches the PayPal web checkout flow via Braintree browser switch library
@@ -67,8 +75,11 @@ class PayPalViewModel @Inject constructor(
                     PayPalWebCheckoutRequest(orderId = order.id, fundingSource = fundingSource)
                 payPalClient.start(activity, request) { result ->
                     checkoutState = when (result) {
-                        is PayPalPresentAuthChallengeResult.Success ->
+                        is PayPalPresentAuthChallengeResult.Success -> {
+                            // persist instance state in case we need it after process kill
+                            savedStateHandle[INSTANCE_STATE_KEY] = payPalClient.instanceState
                             CheckoutState.StartPayPalInProgress("Starting PayPal Checkout")
+                        }
 
                         is PayPalPresentAuthChallengeResult.Failure ->
                             CheckoutState.Error(result.error.toString())
@@ -116,6 +127,11 @@ class PayPalViewModel @Inject constructor(
                 }
             }
         }
+
+        if (result != null) {
+            // clear instance state to make sure we don't restore multiple times
+            savedStateHandle.remove<String>(INSTANCE_STATE_KEY)
+        }
     }
 
     private fun completeOrder(orderId: String) {
@@ -127,6 +143,8 @@ class PayPalViewModel @Inject constructor(
     }
 
     companion object {
+        const val INSTANCE_STATE_KEY = "paypal_client_instance_state"
+
         private val defaultCartUiState by lazy {
             val items = SHOPPING_CART_ITEMS
             val totalAmount = items.sumOf { it.amount }
